@@ -1,0 +1,95 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AdonisUI" Version="1.17.1" />
+    <PackageReference Include="AdonisUI.ClassicTheme" Version="1.17.1" />
+    <PackageReference Include="OpenCvSharp4" Version="4.8.0.20230708" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.8.0.20230708" />
+    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.8.0.20230708" />
+    <PackageReference Include="Prism.Core" Version="8.1.97" />
+    <PackageReference Include="Prism.Unity" Version="8.1.97" />
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="ReactiveUI.Fody" Version="19.4.1" />
+    <PackageReference Include="ReactiveUI.WPF" Version="19.4.1" />
+    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+    <PackageReference Include="Tesseract" Version="5.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Alik\.nuget\packages\tesseract\4.1.1\build\\..\x64\leptonica-1.80.0.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Alik\.nuget\packages\tesseract\4.1.1\build\\..\x64\tesseract41.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Alik\.nuget\packages\tesseract\4.1.1\build\\..\x86\leptonica-1.80.0.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Alik\.nuget\packages\tesseract\4.1.1\build\\..\x86\tesseract41.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Alik\.nuget\packages\tesseract\4.1.1\build\\..\x64\leptonica-1.80.0.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Alik\.nuget\packages\tesseract\4.1.1\build\\..\x64\tesseract41.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Alik\.nuget\packages\tesseract\4.1.1\build\\..\x86\leptonica-1.80.0.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Alik\.nuget\packages\tesseract\4.1.1\build\\..\x86\tesseract41.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Background.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="tessdata\configs\digits">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="tessdata\digits.traineddata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="tessdata\eng.traineddata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="tessdata\rus.traineddata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="C:\Users\Alik\.nuget\packages\tesseract.net.sdk\4.5.411\build\..\content\tessdata\equ.traineddata">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="C:\Users\Alik\.nuget\packages\tesseract.net.sdk\4.5.411\build\..\content\tessdata\osd.traineddata">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="C:\Users\Alik\.nuget\packages\tesseract.net.sdk\4.5.411\build\..\content\tessdata\pdf.ttx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Untitled.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

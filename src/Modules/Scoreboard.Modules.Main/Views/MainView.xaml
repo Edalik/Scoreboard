@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="Scoreboard.Modules.Main.Views.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Scoreboard.Modules.Main.Views"
+             xmlns:vm="clr-namespace:Scoreboard.Modules.Main.ViewModels"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignWidth="1280"
+             d:DesignHeight="720"
+             d:DataContext="{d:DesignInstance vm:MainViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="8*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="7*"/>
+            </Grid.RowDefinitions>
+            <Button Command="{Binding ChooseFileCommand}" Margin="10, 40, 10 , 40" Content="Видео"></Button>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="0" Margin="10, 40, 10 , 40" Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="Команда Хозяев" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="2" Margin="10, 40, 10 , 40" Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="Команда Гостей" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="4" Margin="10, 40, 10 , 40" Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="Период" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="6" Margin="10, 40, 10 , 40" Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="Время" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="8" Margin="10, 40, 10 , 40" Grid.Row="2" Grid.Column="0">
+                    <TextBlock Text="Счет Хозяева" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="10" Margin="10, 40, 10 , 40" Grid.Row="2" Grid.Column="1">
+                    <TextBlock Text="Счет Гости" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="12" Margin="10, 40, 10 , 40" Grid.Row="3" Grid.Column="0">
+                    <TextBlock Text="Удаление Хозяев 1 Номер игрока" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="14" Margin="10, 40, 10 , 40" Grid.Row="4" Grid.Column="0">
+                    <TextBlock Text="Удаление Хозяев 1 Время" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="16" Margin="10, 40, 10 , 40" Grid.Row="5" Grid.Column="0">
+                    <TextBlock Text="Удаление Хозяев 2 Номер игрока" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="18" Margin="10, 40, 10 , 40" Grid.Row="6" Grid.Column="0">
+                    <TextBlock Text="Удаление Хозяев 2 Время" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="20" Margin="10, 40, 10 , 40" Grid.Row="3" Grid.Column="1">
+                    <TextBlock Text="Удаление Гости 1 Номер игрока" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="22" Margin="10, 40, 10 , 40" Grid.Row="4" Grid.Column="1">
+                    <TextBlock Text="Удаление Гости 1 Время" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="24" Margin="10, 40, 10 , 40" Grid.Row="5" Grid.Column="1">
+                    <TextBlock Text="Удаление Гости 2 Номер игрока" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="26" Margin="10, 40, 10 , 40" Grid.Row="6" Grid.Column="1">
+                    <TextBlock Text="Удаление Гости 2 Время" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+            </Grid>
+        </Grid>
+        <Image Source="{Binding Model.Frame}" Grid.Column="1">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseUp">
+                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseDown">
+                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseRightButtonDown">
+                    <i:InvokeCommandAction Command="{Binding MouseRightButtonDownCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Image>
+    </Grid>
+</UserControl>
