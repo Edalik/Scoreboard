@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using OpenCvSharp;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Scoreboard.Modules.Main.Models.Abstractions;
@@ -9,5 +10,5 @@ internal interface IMainService
     ///     Считать видео
     /// </summary>
     /// <param name="mainModel"></param>
-    Task ReadFile(IMainModel mainModel, CancellationToken cancellationToken);
+    Task ReadFile(IMainModel mainModel, CancellationToken cancellationToken, VideoCapture videoCapture);
 }

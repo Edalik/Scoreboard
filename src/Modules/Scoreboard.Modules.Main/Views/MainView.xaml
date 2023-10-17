@@ -6,93 +6,301 @@
              xmlns:local="clr-namespace:Scoreboard.Modules.Main.Views"
              xmlns:vm="clr-namespace:Scoreboard.Modules.Main.ViewModels"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              d:DesignWidth="1280"
              d:DesignHeight="720"
-             d:DataContext="{d:DesignInstance vm:MainViewModel}">
+             d:DataContext="{d:DesignInstance vm:MainViewModel}"
+             Style="{StaticResource MaterialDesignUserControl}">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="8*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="7*"/>
-            </Grid.RowDefinitions>
-            <Button Command="{Binding ChooseFileCommand}" Margin="10, 40, 10 , 40" Content="Видео"></Button>
-            <Grid Grid.Row="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="0" Margin="10, 40, 10 , 40" Grid.Row="0" Grid.Column="0">
-                    <TextBlock Text="Команда Хозяев" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="2" Margin="10, 40, 10 , 40" Grid.Row="0" Grid.Column="1">
-                    <TextBlock Text="Команда Гостей" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="4" Margin="10, 40, 10 , 40" Grid.Row="1" Grid.Column="0">
-                    <TextBlock Text="Период" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="6" Margin="10, 40, 10 , 40" Grid.Row="1" Grid.Column="1">
-                    <TextBlock Text="Время" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="8" Margin="10, 40, 10 , 40" Grid.Row="2" Grid.Column="0">
-                    <TextBlock Text="Счет Хозяева" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="10" Margin="10, 40, 10 , 40" Grid.Row="2" Grid.Column="1">
-                    <TextBlock Text="Счет Гости" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="12" Margin="10, 40, 10 , 40" Grid.Row="3" Grid.Column="0">
-                    <TextBlock Text="Удаление Хозяев 1 Номер игрока" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="14" Margin="10, 40, 10 , 40" Grid.Row="4" Grid.Column="0">
-                    <TextBlock Text="Удаление Хозяев 1 Время" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="16" Margin="10, 40, 10 , 40" Grid.Row="5" Grid.Column="0">
-                    <TextBlock Text="Удаление Хозяев 2 Номер игрока" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="18" Margin="10, 40, 10 , 40" Grid.Row="6" Grid.Column="0">
-                    <TextBlock Text="Удаление Хозяев 2 Время" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="20" Margin="10, 40, 10 , 40" Grid.Row="3" Grid.Column="1">
-                    <TextBlock Text="Удаление Гости 1 Номер игрока" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="22" Margin="10, 40, 10 , 40" Grid.Row="4" Grid.Column="1">
-                    <TextBlock Text="Удаление Гости 1 Время" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="24" Margin="10, 40, 10 , 40" Grid.Row="5" Grid.Column="1">
-                    <TextBlock Text="Удаление Гости 2 Номер игрока" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Command="{Binding ChooseRegionCommand}" CommandParameter="26" Margin="10, 40, 10 , 40" Grid.Row="6" Grid.Column="1">
-                    <TextBlock Text="Удаление Гости 2 Время" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-            </Grid>
-        </Grid>
-        <Image Source="{Binding Model.Frame}" Grid.Column="1">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseUp">
-                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseDown">
-                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseRightButtonDown">
-                    <i:InvokeCommandAction Command="{Binding MouseRightButtonDownCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Image>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <ToolBarTray
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <ToolBar ClipToBounds="False" Style="{StaticResource MaterialDesignToolBar}">
+                <Menu>
+                    <MenuItem Command="{Binding ChooseFileCommand}" Header="Файл"/>
+                    <MenuItem Command="{Binding CameraCommand}" Header="Камера"/>
+                </Menu>
+            </ToolBar>
+        </ToolBarTray>
+
+        <DockPanel Grid.Row="1">
+            <md:DrawerHost>
+                <Grid Focusable="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Header="Лог выполнения">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Border BorderThickness="0, 0, 0, 1" BorderBrush="Gray">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Очистить лог" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="1"
+                                        Margin="0"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Command="{Binding ClearLogCommand}"
+                                        Content="{md:PackIcon Kind=Trash, Size=18}"
+                                        Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                        Cursor="Hand"/>
+                                </Grid>
+                            </Border>
+
+                            <TextBox TextWrapping="Wrap" Grid.Row="1" Text="{Binding Model.Log}"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Margin="10, 10, 10, 10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Label Content="Выбор камеры                    " Foreground="Gray"/>
+                                <ComboBox Grid.Row="1" ItemsSource="{Binding Model.CameraSettings}" SelectedItem="{Binding Model.CameraSetting}"/>
+                            </Grid>
+
+
+                            <Grid Grid.Column="1" Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Column="1" Content="IP                                                                                "/>
+                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Model.IP}"/>
+                            </Grid>
+                        </Grid>
+                        <Image Grid.Row="1"
+                           Margin="65,0,65,0"
+                           Source="{Binding Model.Frame}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseUp">
+                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseDown">
+                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseRightButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding MouseRightButtonDownCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Image>
+                    </Grid>
+
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Зоны распознавания">
+                            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Наименование" HorizontalAlignment="Center"/>
+                                    <Label Grid.Column="1" Content="Включено" HorizontalAlignment="Center"/>
+
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Команда Хозяев" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[0]}" Command="{Binding ChooseRegionCommand}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="1"/>
+
+                                    <Label Grid.Row="2" Grid.Column="0" Content="Команда Гостей" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[1]}" Command="{Binding ChooseRegionCommand}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="1"/>
+
+                                    <Label Grid.Row="3" Grid.Column="0" Content="Период" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[2]}" Command="{Binding ChooseRegionCommand}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="1"/>
+
+                                    <Label Grid.Row="4" Grid.Column="0" Content="Время" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[3]}" Command="{Binding ChooseRegionCommand}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="1"/>
+
+                                    <Label Grid.Row="5" Grid.Column="0" Content="Счет Хозяева" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[4]}" Command="{Binding ChooseRegionCommand}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="1"/>
+
+                                    <Label Grid.Row="6" Grid.Column="0" Content="Счет Гости" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[5]}" Command="{Binding ChooseRegionCommand}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="1"/>
+
+                                    <Label Grid.Row="7" Grid.Column="0" Content="Удаление Хозяев 1 Номер игрока" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[6]}" Command="{Binding ChooseRegionCommand}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="1"/>
+
+                                    <Label Grid.Row="8" Grid.Column="0" Content="Удаление Хозяев 1 Время" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[7]}" Command="{Binding ChooseRegionCommand}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="1"/>
+
+                                    <Label Grid.Row="9" Grid.Column="0" Content="Удаление Хозяев 2 Номер игрока" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[8]}" Command="{Binding ChooseRegionCommand}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="1"/>
+
+                                    <Label Grid.Row="10" Grid.Column="0" Content="Удаление Хозяев 2 Время" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[9]}" Command="{Binding ChooseRegionCommand}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="1"/>
+
+                                    <Label Grid.Row="11" Grid.Column="0" Content="Удаление Гости 1 Номер игрока" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[10]}" Command="{Binding ChooseRegionCommand}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="1"/>
+
+                                    <Label Grid.Row="12" Grid.Column="0" Content="Удаление Гости 1 Время" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[11]}" Command="{Binding ChooseRegionCommand}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="1"/>
+
+                                    <Label Grid.Row="13" Grid.Column="0" Content="Удаление Гости 2 Номер игрока" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[12]}" Command="{Binding ChooseRegionCommand}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="1"/>
+
+                                    <Label Grid.Row="14" Grid.Column="0" Content="Удаление Гости 2 Время" VerticalAlignment="Center"/>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[13]}" Command="{Binding ChooseRegionCommand}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="1"/>
+                                </Grid>
+                            </ScrollViewer>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="Параметры сохранения">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Сохранение настроек" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1"
+                                        BorderThickness="0"
+                                        Margin="10"
+                                        Content="{md:PackIcon Kind=FloppyDisc}"
+                                        Style="{StaticResource IconButton}"
+                                        Command="{Binding SaveSettingsCommand}"
+                                        Cursor="Hand"/>
+
+                                <Label Grid.Row="1" Content="Загрузка настроек" VerticalAlignment="Center"/>
+                                <Button Grid.Row="1"
+                                        Grid.Column="1"
+                                        BorderThickness="0"
+                                        Margin="10"
+                                        Content="{md:PackIcon Kind=PlusBold}"
+                                        Command="{Binding LoadSettingsCommand}"
+                                        Cursor="Hand"/>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </Grid>
+
+                <md:DrawerHost.RightDrawerContent>
+                    <GroupBox Header="Зоны распознавания">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="Наименование" HorizontalAlignment="Center"/>
+                            <Label Grid.Column="1" Content="Включено" HorizontalAlignment="Center"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="Команда Хозяев" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="1"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" Content="Команда Гостей" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="1"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" Content="Период" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="1"/>
+
+                            <Label Grid.Row="4" Grid.Column="0" Content="Время" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="1"/>
+
+                            <Label Grid.Row="5" Grid.Column="0" Content="Счет Хозяева" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="1"/>
+
+                            <Label Grid.Row="6" Grid.Column="0" Content="Счет Гости" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="1"/>
+
+                            <Label Grid.Row="7" Grid.Column="0" Content="Удаление Хозяев 1 Номер игрока" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="1"/>
+
+                            <Label Grid.Row="8" Grid.Column="0" Content="Удаление Хозяев 1 Время" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="1"/>
+
+                            <Label Grid.Row="9" Grid.Column="0" Content="Удаление Хозяев 2 Номер игрока" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="1"/>
+
+                            <Label Grid.Row="10" Grid.Column="0" Content="Удаление Хозяев 2 Время" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="1"/>
+
+                            <Label Grid.Row="11" Grid.Column="0" Content="Удаление Гости 1 Номер игрока" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="1"/>
+
+                            <Label Grid.Row="12" Grid.Column="0" Content="Удаление Гости 1 Время" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="1"/>
+
+                            <Label Grid.Row="13" Grid.Column="0" Content="Удаление Гости 2 Номер игрока" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="1"/>
+
+                            <Label Grid.Row="14" Grid.Column="0" Content="Удаление Гости 2 Время" VerticalAlignment="Center"/>
+                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="1"/>
+                        </Grid>
+                    </GroupBox>
+                </md:DrawerHost.RightDrawerContent>
+            </md:DrawerHost>
+
+
+        </DockPanel>
+
     </Grid>
 </UserControl>

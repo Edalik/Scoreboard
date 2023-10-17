@@ -10,7 +10,8 @@
         Title="MainWindow"
         Width="1280"
         Height="720"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        Style="{StaticResource MaterialDesignWindow}">
     <Grid>
         <ContentControl prism:RegionManager.RegionName="MainRegion"/>
     </Grid>
