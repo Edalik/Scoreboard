@@ -13,12 +13,14 @@ internal interface IMainModel
     ObservableCollection<bool> IsChecked { get; set; }
     ObservableCollection<bool> IsChoosing { get; set; }
     ObservableCollection<bool> IsResizing { get; set; }
+    ObservableCollection<Brush> TextColor { get; set; }
     List<string> CameraSettings { get; set; }
-    string CameraSetting { get; set; }
+    int CameraSetting { get; set; }
     double Fps { get; set; }
     string Log { get; set; }
     string[] SaveSettings { get; set; }
     string SaveSetting { get; set; }
     bool IsAppend {  get; set; }
-    bool FpsEnabled { get; set; }
+    bool FpsIncreaseEnabled { get; set; }
+    bool FpsDecreaseEnabled { get; set; }
 }

@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Scoreboard.Modules.Main.ViewModels;
@@ -23,6 +24,8 @@ class MainViewModel
     public IMainModel Model { get; }
     public ICommand ChooseFileCommand { get; }
     public ICommand CameraCommand { get; }
+    public ICommand FpsIncreaseCommand { get; }
+    public ICommand FpsDecreaseCommand { get; }
     public DelegateCommand<string?> ChooseRegionCommand { get; set; }
     public ICommand MouseDownCommand { get; }
     public ICommand MouseUpCommand { get; }
@@ -36,7 +39,7 @@ class MainViewModel
     [Reactive] public CancellationTokenSource LastTokenSource { get; set; }
     private Task lastReadingTask;
 
-    public int choosingID;
+    public int choosingID = -1;
     public int resizingID = -1;
 
     public bool isChoosing = false;
@@ -60,7 +63,16 @@ class MainViewModel
                 if (Mouse.OverrideCursor == Cursors.Cross)
                 {
                     isChoosing = true;
-                    Image img = (Image)Mouse.DirectlyOver;
+                    Image img;
+                    try
+                    {
+
+                        img = (Image)Mouse.DirectlyOver;
+                    }
+                    catch
+                    {
+                        return;
+                    }
                     point = Mouse.GetPosition(img);
                     Mat mat = WriteableBitmapConverter.ToMat((WriteableBitmap)Model.Frame);
                     double x = point.X * (mat.Height / img.ActualHeight);
@@ -230,7 +242,6 @@ class MainViewModel
                     return;
                 }
                 VideoCapture videoCapture = new VideoCapture(openFileDialog.FileName);
-                Model.FpsEnabled = false;
 
                 lastReadingTask = ReadFile(LastTokenSource.Token, videoCapture);
                 await lastReadingTask;
@@ -249,21 +260,7 @@ class MainViewModel
                     await lastReadingTask;
                 }
 
-                Model.FpsEnabled = true;
-
-                VideoCapture videoCapture = new VideoCapture(0);
-                switch (Model.CameraSetting)
-                {
-                    case "Обычная":
-                        break;
-                    case "Веб":
-                        break;
-                    case "IP":
-                        videoCapture.Open("https://192.168.100.3:8080/video");
-                        break;
-                }
-
-                lastReadingTask = ReadFile(LastTokenSource.Token, videoCapture);
+                lastReadingTask = ReadFile(LastTokenSource.Token, new VideoCapture(Model.CameraSetting));
                 await lastReadingTask;
             }
         );
@@ -342,25 +339,54 @@ class MainViewModel
                 reader.Close();
             }
         );
+
+        FpsIncreaseCommand = ReactiveCommand.Create
+        (
+            () =>
+            {
+                if (Model.Fps < 25)
+                    Model.Fps++;
+            }
+        );
+
+        FpsDecreaseCommand = ReactiveCommand.Create
+        (
+            () =>
+            {
+                if (Model.Fps > 1)
+                    Model.Fps--;
+            }
+        );
     }
 
     private void ChooseRegion(string? parameter)
     {
+        Model.IsResizing[choosingID / 2] = false;
+        isResizing = false;
+        Model.TextColor[choosingID / 2] = Brushes.White;
         choosingID = Convert.ToInt32(parameter);
         Mouse.OverrideCursor = Cursors.Cross;
     }
 
     private void Resize(string? parameter)
     {
-        Model.IsResizing[choosingID / 2] = false;
-        choosingID = Convert.ToInt32(parameter);
         if (Model.IsResizing[choosingID / 2])
         {
-            Model.IsResizing[choosingID / 2] = !Model.IsResizing[choosingID / 2];
+            Model.IsResizing[choosingID / 2] = false;
             isResizing = false;
+            Model.TextColor[choosingID / 2] = Brushes.White;
+        }
+        if (choosingID == Convert.ToInt32(parameter) && Mouse.OverrideCursor != Cursors.Cross)
+        {
+            choosingID = -1;
             return;
         }
+        Mouse.OverrideCursor = null;
+        Model.IsChoosing[choosingID / 2] = false;
+        choosingID = Convert.ToInt32(parameter);
+        Model.TextColor[choosingID / 2] = Brushes.Red;
         isResizing = true;
+        isChoosing = false;
         Model.IsResizing[choosingID / 2] = !Model.IsResizing[choosingID / 2];
     }
 

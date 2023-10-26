@@ -51,7 +51,12 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _isResizing, value);
     }
 
-    //{ "Обычная", "Веб", "IP" }
+    private ObservableCollection<Brush> _textColor = new ObservableCollection<Brush>() { Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White };
+    public ObservableCollection<Brush> TextColor
+    {
+        get => _textColor;
+        set => SetProperty(ref _textColor, value);
+    }
 
     private List<string> _cameraSettings = GetAllConnectedCameras();
     public List<string> CameraSettings
@@ -74,8 +79,8 @@ internal class MainModel : BindableBase, IMainModel
         return cameraNames;
     }
 
-    private string _cameraSetting = "Обычная";
-    public string CameraSetting
+    private int _cameraSetting = 0;
+    public int CameraSetting
     {
         get => _cameraSetting;
         set => SetProperty(ref _cameraSetting, value);
@@ -116,10 +121,17 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _isAppend, value);
     }
 
-    private bool _fpsEnabled = false;
-    public bool FpsEnabled
+    private bool _fpsIncreaseEnabled = true;
+    public bool FpsIncreaseEnabled
     {
-        get => _fpsEnabled;
-        set => SetProperty(ref _fpsEnabled, value);
+        get => _fpsIncreaseEnabled;
+        set => SetProperty(ref _fpsIncreaseEnabled, value);
+    }
+
+    private bool _fpsDecreaseEnabled = false;
+    public bool FpsDecreaseEnabled
+    {
+        get => _fpsDecreaseEnabled;
+        set => SetProperty(ref _fpsDecreaseEnabled, value);
     }
 }

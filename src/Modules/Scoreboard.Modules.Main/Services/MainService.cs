@@ -145,6 +145,8 @@ internal class MainService : IMainService
                     if (videoCapture.CaptureType == CaptureType.File)
                         for (int i = 0; i < (fps / model.Fps) && videoCapture.PosFrames < videoCapture.FrameCount - 1; i++)
                             videoCapture.Read(frame);
+                    else
+                        videoCapture.Read(frame);
 
                     stopwatch.Stop();
                     if ((int)(1000 / model.Fps) - (int)stopwatch.ElapsedMilliseconds > 0)

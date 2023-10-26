@@ -58,18 +58,6 @@
                 <Setter Property="TextOptions.TextRenderingMode" Value="Auto" />
             </Style>
 
-            <Style TargetType="Thumb">
-                
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate>
-                            <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"/>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                
-            </Style>
-
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
