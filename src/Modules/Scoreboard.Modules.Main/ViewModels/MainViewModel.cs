@@ -37,8 +37,11 @@ class MainViewModel
     private Task lastReadingTask;
 
     public int choosingID;
+    public int resizingID = -1;
 
     public bool isChoosing = false;
+
+    public bool isResizing = false;
 
     public System.Windows.Point point;
 
@@ -48,19 +51,37 @@ class MainViewModel
         Model = new MainModel();
 
         ChooseRegionCommand = new DelegateCommand<string?>(ChooseRegion);
+        ResizeCommand = new DelegateCommand<string?>(Resize);
 
         MouseDownCommand = ReactiveCommand.Create
         (
             () =>
             {
-                isChoosing = true;
-                Image img = (Image)Mouse.DirectlyOver;
-                point = Mouse.GetPosition(img);
-                Mat mat = WriteableBitmapConverter.ToMat((WriteableBitmap)Model.Frame);
-                double x = point.X * (mat.Height / img.ActualHeight);
-                double y = point.Y * (mat.Width / img.ActualWidth);
-                Model.Points[choosingID] = new System.Windows.Point(x, y);
-                Model.IsChecked[choosingID / 2] = false;
+                if (Mouse.OverrideCursor == Cursors.Cross)
+                {
+                    isChoosing = true;
+                    Image img = (Image)Mouse.DirectlyOver;
+                    point = Mouse.GetPosition(img);
+                    Mat mat = WriteableBitmapConverter.ToMat((WriteableBitmap)Model.Frame);
+                    double x = point.X * (mat.Height / img.ActualHeight);
+                    double y = point.Y * (mat.Width / img.ActualWidth);
+                    Model.Points[choosingID] = new System.Windows.Point(x, y);
+                    Model.IsChecked[choosingID / 2] = false;
+                }
+
+                else if (isResizing)
+                {
+                    Image img = (Image)Mouse.DirectlyOver;
+                    point = Mouse.GetPosition(img);
+                    Mat mat = WriteableBitmapConverter.ToMat((WriteableBitmap)Model.Frame);
+                    double x = point.X * (mat.Height / img.ActualHeight);
+                    double y = point.Y * (mat.Width / img.ActualWidth);
+
+                    if (Math.Abs(Model.Points[choosingID].X - x) < 5 && Math.Abs(Model.Points[choosingID].Y - y) < 5)
+                        resizingID = choosingID;
+                    else if (Math.Abs(Model.Points[choosingID + 1].X - x) < 5 && Math.Abs(Model.Points[choosingID + 1].Y - y) < 5)
+                        resizingID = choosingID + 1;
+                }
             }
         );
 
@@ -85,6 +106,45 @@ class MainViewModel
                         i++;
                     }
                     Model.Frame = mat.ToWriteableBitmap();
+                }
+
+                else if (isResizing)
+                {
+                    Image img = (Image)Mouse.DirectlyOver;
+                    point = Mouse.GetPosition(img);
+                    Mat mat = WriteableBitmapConverter.ToMat((WriteableBitmap)Model.CleanFrame);
+                    double x = point.X * (mat.Height / img.ActualHeight);
+                    double y = point.Y * (mat.Width / img.ActualWidth);
+
+                    if (Math.Abs(Model.Points[choosingID].X - x) < 2 && Math.Abs(Model.Points[choosingID].Y - y) < 2)
+                        Mouse.OverrideCursor = Cursors.SizeNWSE;
+                    else if (Math.Abs(Model.Points[choosingID + 1].X - x) < 2 && Math.Abs(Model.Points[choosingID + 1].Y - y) < 2)
+                    {
+                        Mouse.OverrideCursor = Cursors.SizeNWSE;
+                    }
+                    else
+                        Mouse.OverrideCursor = null;
+
+                    if (resizingID >= 0)
+                    {
+                        Model.Points[resizingID] = new System.Windows.Point(x, y);
+                        for (int i = 0; i < Model.Points.Length; i++)
+                        {
+                            if (Model.Points[i] != default)
+                            {
+                                if (Model.IsResizing[i / 2])
+                                {
+                                    mat.Rectangle(new OpenCvSharp.Point(Model.Points[i].X, Model.Points[i].Y), new OpenCvSharp.Point(Model.Points[i + 1].X, Model.Points[i + 1].Y), Scalar.Red, 1);
+                                    mat.Rectangle(new OpenCvSharp.Point(Model.Points[i].X - 1, Model.Points[i].Y - 1), new OpenCvSharp.Point(Model.Points[i].X + 1, Model.Points[i].Y + 1), Scalar.Red, -1);
+                                    mat.Rectangle(new OpenCvSharp.Point(Model.Points[i + 1].X - 1, Model.Points[i + 1].Y - 1), new OpenCvSharp.Point(Model.Points[i + 1].X + 1, Model.Points[i + 1].Y + 1), Scalar.Red, -1);
+                                }
+                                else
+                                    mat.Rectangle(new OpenCvSharp.Point(Model.Points[i].X, Model.Points[i].Y), new OpenCvSharp.Point(Model.Points[i + 1].X, Model.Points[i + 1].Y), Scalar.White, 1);
+                            }
+                            i++;
+                        }
+                        Model.Frame = mat.ToWriteableBitmap();
+                    }
                 }
             }
         );
@@ -126,6 +186,28 @@ class MainViewModel
                         Model.Points[choosingID] = default;
 
                     Model.IsChecked[choosingID / 2] = true;
+                }
+                else if (isResizing)
+                {
+                    Mouse.OverrideCursor = null;
+                    resizingID = -1;
+
+                    if (Model.Points[choosingID + 1].X < Model.Points[choosingID].X)
+                    {
+                        double tmp = Model.Points[choosingID + 1].X;
+                        Model.Points[choosingID + 1].X = Model.Points[choosingID].X;
+                        Model.Points[choosingID].X = tmp;
+                    }
+
+                    if (Model.Points[choosingID + 1].Y < Model.Points[choosingID].Y)
+                    {
+                        double tmp = Model.Points[choosingID + 1].Y;
+                        Model.Points[choosingID + 1].Y = Model.Points[choosingID].Y;
+                        Model.Points[choosingID].Y = tmp;
+                    }
+
+                    if (Model.Points[choosingID + 1].X - Model.Points[choosingID].X < 10 || Model.Points[choosingID + 1].Y - Model.Points[choosingID].Y < 10)
+                        Model.Points[choosingID] = default;
                 }
             }
         );
@@ -267,5 +349,20 @@ class MainViewModel
         choosingID = Convert.ToInt32(parameter);
         Mouse.OverrideCursor = Cursors.Cross;
     }
+
+    private void Resize(string? parameter)
+    {
+        Model.IsResizing[choosingID / 2] = false;
+        choosingID = Convert.ToInt32(parameter);
+        if (Model.IsResizing[choosingID / 2])
+        {
+            Model.IsResizing[choosingID / 2] = !Model.IsResizing[choosingID / 2];
+            isResizing = false;
+            return;
+        }
+        isResizing = true;
+        Model.IsResizing[choosingID / 2] = !Model.IsResizing[choosingID / 2];
+    }
+
     private Task ReadFile(CancellationToken cancellationToken, VideoCapture videoCapture) => _mainService.ReadFile(Model, cancellationToken, videoCapture);
 }

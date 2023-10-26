@@ -12,6 +12,7 @@ internal interface IMainModel
     Point[] Points { get; set; }
     ObservableCollection<bool> IsChecked { get; set; }
     ObservableCollection<bool> IsChoosing { get; set; }
+    ObservableCollection<bool> IsResizing { get; set; }
     List<string> CameraSettings { get; set; }
     string CameraSetting { get; set; }
     double Fps { get; set; }

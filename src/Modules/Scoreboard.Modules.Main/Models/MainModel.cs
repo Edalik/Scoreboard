@@ -44,6 +44,13 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _isChoosing, value);
     }
 
+    private ObservableCollection<bool> _isResizing = new ObservableCollection<bool>() { false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+    public ObservableCollection<bool> IsResizing
+    {
+        get => _isResizing;
+        set => SetProperty(ref _isResizing, value);
+    }
+
     //{ "Обычная", "Веб", "IP" }
 
     private List<string> _cameraSettings = GetAllConnectedCameras();
