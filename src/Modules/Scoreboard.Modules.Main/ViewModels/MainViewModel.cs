@@ -195,9 +195,13 @@ class MainViewModel
                     }
 
                     if (Model.Points[choosingID + 1].X - Model.Points[choosingID].X < 10 || Model.Points[choosingID + 1].Y - Model.Points[choosingID].Y < 10)
+                    {
                         Model.Points[choosingID] = default;
+                        return;
+                    }
 
                     Model.IsChecked[choosingID / 2] = true;
+                    choosingID = -1;
                 }
                 else if (isResizing)
                 {
