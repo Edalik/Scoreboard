@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:Scoreboard.Modules.Main.ViewModels"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
@@ -30,30 +31,64 @@
                 </Menu>
             </ToolBar>
         </ToolBarTray>
+        <Grid Grid.Row="1" Focusable="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Row="1">
-            <md:DrawerHost>
-                <Grid Focusable="True">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
+            <GroupBox Header="Лог выполнения">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
 
-                    <GroupBox Header="Лог выполнения">
+                    <Label Content="Способ сохранения" Foreground="Gray"/>
+
+                    <ComboBox Grid.Row="1" ItemsSource="{Binding Model.SaveSettings}" SelectedItem="{Binding Model.SaveSetting}"/>
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Content="Добавлять в конец" VerticalAlignment="Center"/>
+                        <ToggleButton IsChecked="{Binding Model.IsAppend}" Margin="10, 10, 10, 10" Grid.Column="1"/>
+                    </Grid>
+
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Content="Сохранить лог" VerticalAlignment="Center"/>
+                        <Button Grid.Column="1"
+                                        BorderThickness="0"
+                                        Margin="10"
+                                        Content="{md:PackIcon Kind=FloppyDisc}"
+                                        Style="{StaticResource IconButton}"
+                                        Command="{Binding SaveLogCommand}"
+                                        Cursor="Hand"/>
+                    </Grid>
+
+                    <TextBox BorderThickness="2, 2, 2, 2" BorderBrush="Gray" TextWrapping="Wrap" Grid.Row="4" Text="{Binding Model.Log}" IsReadOnly="True"/>
+
+                    <Border Grid.Row="5">
                         <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Border BorderThickness="0, 0, 0, 1" BorderBrush="Gray">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Очистить лог" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="1"
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="Очистить лог" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1"
                                         Margin="0"
                                         Background="Transparent"
                                         BorderThickness="0"
@@ -61,173 +96,75 @@
                                         Content="{md:PackIcon Kind=Trash, Size=18}"
                                         Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
                                         Cursor="Hand"/>
-                                </Grid>
-                            </Border>
-
-                            <TextBox TextWrapping="Wrap" Grid.Row="1" Text="{Binding Model.Log}"/>
                         </Grid>
-                    </GroupBox>
+                    </Border>
+                </Grid>
+            </GroupBox>
 
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid Margin="10, 10, 10, 10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1" x:Name="Grid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Margin="10, 10, 10, 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-                            <Grid Margin="10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-
-                                <Label Content="Выбор камеры                    " Foreground="Gray"/>
-                                <ComboBox Grid.Row="1" ItemsSource="{Binding Model.CameraSettings}" SelectedItem="{Binding Model.CameraSetting}"/>
-                            </Grid>
-
-
-                            <Grid Grid.Column="1" Margin="10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-
-                                <Label Grid.Column="1" Content="IP                                                                                "/>
-                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Model.IP}"/>
-                            </Grid>
-                        </Grid>
-                        <Image Grid.Row="1"
-                           Margin="65,0,65,0"
-                           Source="{Binding Model.Frame}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseDown">
-                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseRightButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding MouseRightButtonDownCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Image>
-                    </Grid>
-
-                    <Grid Grid.Column="2">
+                    <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
-                            <RowDefinition Height="auto"/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <GroupBox Header="Зоны распознавания">
-                            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="Наименование" HorizontalAlignment="Center"/>
-                                    <Label Grid.Column="1" Content="Включено" HorizontalAlignment="Center"/>
 
-                                    <Label Grid.Row="1" Grid.Column="0" Content="Команда Хозяев" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[0]}" Command="{Binding ChooseRegionCommand}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="1"/>
+                        <Label Content="Выбор камеры                    " Foreground="Gray"/>
+                        <ComboBox Grid.Row="1" ItemsSource="{Binding Model.CameraSettings}" SelectedItem="{Binding Model.CameraSetting}"/>
+                    </Grid>
 
-                                    <Label Grid.Row="2" Grid.Column="0" Content="Команда Гостей" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[1]}" Command="{Binding ChooseRegionCommand}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="1"/>
 
-                                    <Label Grid.Row="3" Grid.Column="0" Content="Период" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[2]}" Command="{Binding ChooseRegionCommand}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="1"/>
+                    <Grid Grid.Column="1" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-                                    <Label Grid.Row="4" Grid.Column="0" Content="Время" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[3]}" Command="{Binding ChooseRegionCommand}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="1"/>
-
-                                    <Label Grid.Row="5" Grid.Column="0" Content="Счет Хозяева" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[4]}" Command="{Binding ChooseRegionCommand}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="1"/>
-
-                                    <Label Grid.Row="6" Grid.Column="0" Content="Счет Гости" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[5]}" Command="{Binding ChooseRegionCommand}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="1"/>
-
-                                    <Label Grid.Row="7" Grid.Column="0" Content="Удаление Хозяев 1 Номер игрока" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[6]}" Command="{Binding ChooseRegionCommand}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="1"/>
-
-                                    <Label Grid.Row="8" Grid.Column="0" Content="Удаление Хозяев 1 Время" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[7]}" Command="{Binding ChooseRegionCommand}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="1"/>
-
-                                    <Label Grid.Row="9" Grid.Column="0" Content="Удаление Хозяев 2 Номер игрока" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[8]}" Command="{Binding ChooseRegionCommand}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="1"/>
-
-                                    <Label Grid.Row="10" Grid.Column="0" Content="Удаление Хозяев 2 Время" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[9]}" Command="{Binding ChooseRegionCommand}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="1"/>
-
-                                    <Label Grid.Row="11" Grid.Column="0" Content="Удаление Гости 1 Номер игрока" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[10]}" Command="{Binding ChooseRegionCommand}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="1"/>
-
-                                    <Label Grid.Row="12" Grid.Column="0" Content="Удаление Гости 1 Время" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[11]}" Command="{Binding ChooseRegionCommand}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="1"/>
-
-                                    <Label Grid.Row="13" Grid.Column="0" Content="Удаление Гости 2 Номер игрока" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[12]}" Command="{Binding ChooseRegionCommand}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="1"/>
-
-                                    <Label Grid.Row="14" Grid.Column="0" Content="Удаление Гости 2 Время" VerticalAlignment="Center"/>
-                                    <ToggleButton IsChecked="{Binding Model.IsChecked[13]}" Command="{Binding ChooseRegionCommand}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="1"/>
-                                </Grid>
-                            </ScrollViewer>
-                        </GroupBox>
-                        <GroupBox Grid.Row="1" Header="Параметры сохранения">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Сохранение настроек" VerticalAlignment="Center"/>
-                                <Button Grid.Column="1"
-                                        BorderThickness="0"
-                                        Margin="10"
-                                        Content="{md:PackIcon Kind=FloppyDisc}"
-                                        Style="{StaticResource IconButton}"
-                                        Command="{Binding SaveSettingsCommand}"
-                                        Cursor="Hand"/>
-
-                                <Label Grid.Row="1" Content="Загрузка настроек" VerticalAlignment="Center"/>
-                                <Button Grid.Row="1"
-                                        Grid.Column="1"
-                                        BorderThickness="0"
-                                        Margin="10"
-                                        Content="{md:PackIcon Kind=PlusBold}"
-                                        Command="{Binding LoadSettingsCommand}"
-                                        Cursor="Hand"/>
-                            </Grid>
-                        </GroupBox>
+                        <Label Grid.Column="1" Content="Частота, сек"/>
+                        <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding Model.Fps}" Minimum="1" Maximum="25">
+                            <!--<i:Interaction.Triggers>
+                                <i:EventTrigger EventName="ValueChanged">
+                                    <i:InvokeCommandAction Command="{Binding CameraCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>-->
+                        </mah:NumericUpDown>
                     </Grid>
                 </Grid>
+                <Image Grid.Row="1"
+                       Margin="65,0,65,0"
+                       Source="{Binding Model.Frame}"
+                       x:Name="image">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseUp">
+                            <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseMove">
+                            <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseDown">
+                            <i:InvokeCommandAction Command="{Binding MouseDownCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Image>
+            </Grid>
 
-                <md:DrawerHost.RightDrawerContent>
-                    <GroupBox Header="Зоны распознавания">
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <GroupBox Header="Зоны распознавания">
+                    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -247,60 +184,109 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
                             <Label Content="Наименование" HorizontalAlignment="Center"/>
                             <Label Grid.Column="1" Content="Включено" HorizontalAlignment="Center"/>
+                            <Label Grid.Column="2" Content="Создать" HorizontalAlignment="Center"/>
 
-                            <Label Grid.Row="1" Grid.Column="0" Content="Команда Хозяев" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="1"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Команда Хозяев" VerticalAlignment="Center">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDown">
+                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Label>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[0]}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[0]}" Command="{Binding ChooseRegionCommand}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="2"/>
 
                             <Label Grid.Row="2" Grid.Column="0" Content="Команда Гостей" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[1]}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[1]}" Command="{Binding ChooseRegionCommand}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="2"/>
 
                             <Label Grid.Row="3" Grid.Column="0" Content="Период" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[2]}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[2]}" Command="{Binding ChooseRegionCommand}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="2"/>
 
                             <Label Grid.Row="4" Grid.Column="0" Content="Время" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[3]}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[3]}" Command="{Binding ChooseRegionCommand}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="2"/>
 
                             <Label Grid.Row="5" Grid.Column="0" Content="Счет Хозяева" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[4]}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[4]}" Command="{Binding ChooseRegionCommand}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="2"/>
 
                             <Label Grid.Row="6" Grid.Column="0" Content="Счет Гости" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[5]}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[5]}" Command="{Binding ChooseRegionCommand}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="2"/>
 
                             <Label Grid.Row="7" Grid.Column="0" Content="Удаление Хозяев 1 Номер игрока" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[6]}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[6]}" Command="{Binding ChooseRegionCommand}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="2"/>
 
                             <Label Grid.Row="8" Grid.Column="0" Content="Удаление Хозяев 1 Время" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[7]}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[7]}" Command="{Binding ChooseRegionCommand}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="2"/>
 
                             <Label Grid.Row="9" Grid.Column="0" Content="Удаление Хозяев 2 Номер игрока" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[8]}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[8]}" Command="{Binding ChooseRegionCommand}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="2"/>
 
                             <Label Grid.Row="10" Grid.Column="0" Content="Удаление Хозяев 2 Время" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[9]}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[9]}" Command="{Binding ChooseRegionCommand}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="2"/>
 
                             <Label Grid.Row="11" Grid.Column="0" Content="Удаление Гости 1 Номер игрока" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[10]}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[10]}" Command="{Binding ChooseRegionCommand}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="2"/>
 
                             <Label Grid.Row="12" Grid.Column="0" Content="Удаление Гости 1 Время" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[11]}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[11]}" Command="{Binding ChooseRegionCommand}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="2"/>
 
                             <Label Grid.Row="13" Grid.Column="0" Content="Удаление Гости 2 Номер игрока" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[12]}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[12]}" Command="{Binding ChooseRegionCommand}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="2"/>
 
                             <Label Grid.Row="14" Grid.Column="0" Content="Удаление Гости 2 Время" VerticalAlignment="Center"/>
-                            <ToggleButton Command="{Binding ChooseRegionCommand}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChecked[13]}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="1"/>
+                            <ToggleButton IsChecked="{Binding Model.IsChoosing[13]}" Command="{Binding ChooseRegionCommand}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="2"/>
                         </Grid>
-                    </GroupBox>
-                </md:DrawerHost.RightDrawerContent>
-            </md:DrawerHost>
+                    </ScrollViewer>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="Параметры сохранения">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Сохранение настроек" VerticalAlignment="Center"/>
+                        <Button Grid.Column="1"
+                                        BorderThickness="0"
+                                        Margin="10"
+                                        Content="{md:PackIcon Kind=FloppyDisc}"
+                                        Style="{StaticResource IconButton}"
+                                        Command="{Binding SaveSettingsCommand}"
+                                        Cursor="Hand"/>
 
-
-        </DockPanel>
+                        <Label Grid.Row="1" Content="Загрузка настроек" VerticalAlignment="Center"/>
+                        <Button Grid.Row="1"
+                                        Grid.Column="1"
+                                        BorderThickness="0"
+                                        Margin="10"
+                                        Content="{md:PackIcon Kind=PlusBold}"
+                                        Command="{Binding LoadSettingsCommand}"
+                                        Cursor="Hand"/>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </Grid>
 
     </Grid>
 </UserControl>

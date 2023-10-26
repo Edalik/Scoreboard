@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace Scoreboard.Modules.Main.Views
+namespace Scoreboard.Modules.Main.Views;
+
+/// <summary>
+/// Логика взаимодействия для MainView.xaml
+/// </summary>
+public partial class MainView : UserControl
 {
-    /// <summary>
-    /// Логика взаимодействия для MainView.xaml
-    /// </summary>
-    public partial class MainView : UserControl
+    public MainView()
     {
-        public MainView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

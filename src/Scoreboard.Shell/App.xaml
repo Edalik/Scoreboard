@@ -5,19 +5,18 @@
     xmlns:local="clr-namespace:Scoreboard.Shell"
     xmlns:prism="http://prismlibrary.com/" >
     <Application.Resources>
-        <ResourceDictionary
-    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes">
+        <ResourceDictionary  xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.GroupBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignExtensions;component/Themes/Generic.xaml" />
-                <md:BundledTheme
-            BaseTheme="Dark"
-            ColorAdjustment="{md:ColorAdjustment}"
-            PrimaryColor="LightBlue"
-            SecondaryColor="Blue" />
+                <md:BundledTheme BaseTheme="Dark"
+                                 ColorAdjustment="{md:ColorAdjustment}"
+                                 PrimaryColor="LightBlue"
+                                 SecondaryColor="Blue" />
             </ResourceDictionary.MergedDictionaries>
+            
             <Style BasedOn="{StaticResource MaterialDesignDataGrid}" TargetType="DataGrid">
                 <Setter Property="AutoGenerateColumns" Value="False" />
                 <Setter Property="CanUserAddRows" Value="False" />
@@ -28,16 +27,17 @@
                 <Setter Property="IsReadOnly" Value="True" />
                 <Setter Property="SelectionMode" Value="Single" />
             </Style>
-            <Style
-        x:Key="IconButton"
-        BasedOn="{StaticResource MaterialDesignIconButton}"
-        TargetType="{x:Type Button}">
+            
+            <Style x:Key="IconButton"
+                   BasedOn="{StaticResource MaterialDesignIconButton}"
+                   TargetType="{x:Type Button}">
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="Margin" Value="14" />
                 <Setter Property="Width" Value="24" />
                 <Setter Property="Height" Value="24" />
                 <Setter Property="Cursor" Value="Hand" />
             </Style>
+            
             <Style x:Key="MaterialDesignWindow" TargetType="{x:Type Window}">
                 <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
                 <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}" />
@@ -57,6 +57,19 @@
                 <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
                 <Setter Property="TextOptions.TextRenderingMode" Value="Auto" />
             </Style>
+
+            <Style TargetType="Thumb">
+                
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

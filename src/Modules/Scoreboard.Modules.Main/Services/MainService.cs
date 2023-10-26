@@ -2,6 +2,7 @@
 using OpenCvSharp.WpfExtensions;
 using Scoreboard.Modules.Main.Models.Abstractions;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -21,27 +22,33 @@ internal class MainService : IMainService
             async () =>
             {
                 Mat frame = new Mat();
-                var periodicTimer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+                //var periodicTimer = new PeriodicTimer(TimeSpan.FromSeconds(1 / model.Fps));
                 videoCapture.Read(frame);
                 int fps = (int)videoCapture.Fps;
-                while (await periodicTimer.WaitForNextTickAsync() && !cancellationToken.IsCancellationRequested)
+                StreamWriter writer = new StreamWriter($"log.txt");
+                while (!cancellationToken.IsCancellationRequested)
+                //while (await periodicTimer.WaitForNextTickAsync() && !cancellationToken.IsCancellationRequested)
                 {
+                    Stopwatch stopwatch = Stopwatch.StartNew();
                     Mat mat = frame.Clone();
                     Mat matg = frame.Clone();
                     Cv2.CvtColor(matg, matg, ColorConversionCodes.BGR2GRAY);
                     Cv2.AdaptiveThreshold(matg, matg, 255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.BinaryInv, 21, -21);
-                    StreamWriter writer = new StreamWriter("result.txt");
                     string log = "";
                     for (int i = 0; i < model.Points.Length; i++)
                     {
+                        Mat tmp = new Mat();
+                        if (model.Points[i] != default)
+                        {
+                            mat.Rectangle(new OpenCvSharp.Point(model.Points[i].X, model.Points[i].Y), new OpenCvSharp.Point(model.Points[i + 1].X, model.Points[i + 1].Y), Scalar.White, 1);
+                        }
                         if (model.IsChecked[i / 2] && model.Points[i] != default)
                         {
-                            Mat tmp = matg.Clone().SubMat(new OpenCvSharp.Rect((int)model.Points[i].X, (int)model.Points[i].Y, (int)model.Points[i + 1].X - (int)model.Points[i].X, (int)model.Points[i + 1].Y - (int)model.Points[i].Y));
-                            mat.Rectangle(new OpenCvSharp.Point(model.Points[i].X, model.Points[i].Y), new OpenCvSharp.Point(model.Points[i + 1].X, model.Points[i + 1].Y), Scalar.HotPink, 1);
-                            mat.Circle((int)model.Points[i].X, (int)model.Points[i].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
-                            mat.Circle((int)model.Points[i + 1].X, (int)model.Points[i + 1].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
-                            mat.Circle((int)model.Points[i + 1].X, (int)model.Points[i].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
-                            mat.Circle((int)model.Points[i].X, (int)model.Points[i + 1].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
+                            tmp = matg.Clone().SubMat(new OpenCvSharp.Rect((int)model.Points[i].X, (int)model.Points[i].Y, (int)model.Points[i + 1].X - (int)model.Points[i].X, (int)model.Points[i + 1].Y - (int)model.Points[i].Y));
+                            //mat.Circle((int)model.Points[i].X, (int)model.Points[i].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
+                            //mat.Circle((int)model.Points[i + 1].X, (int)model.Points[i + 1].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
+                            //mat.Circle((int)model.Points[i + 1].X, (int)model.Points[i].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
+                            //mat.Circle((int)model.Points[i].X, (int)model.Points[i + 1].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
                             string text = "";
                             try
                             {
@@ -67,59 +74,45 @@ internal class MainService : IMainService
                             switch (i)
                             {
                                 case 0:
-                                    writer.Write($"HOME={text}\n");
                                     log += $"HOME={text}\n";
                                     break;
                                 case 2:
-                                    writer.Write($"GUEST={text}\n");
                                     log += $"GUEST={text}\n";
                                     break;
                                 case 4:
-                                    writer.Write($"PERIOD={text}\n");
                                     log += $"PERIOD={text}\n";
                                     break;
                                 case 6:
-                                    writer.Write($"TIME={text}\n");
                                     log += $"TIME={text}\n";
                                     break;
                                 case 8:
-                                    writer.Write($"HOME_SCORE={text}\n");
                                     log += $"HOME_SCORE={text}\n";
                                     break;
                                 case 10:
-                                    writer.Write($"GUEST_SCORE={text}\n");
                                     log += $"GUEST_SCORE={text}\n";
                                     break;
                                 case 12:
-                                    writer.Write($"HOME_PENALTY1_NUM={text}\n");
                                     log += $"HOME_PENALTY1_NUM={text}\n";
                                     break;
                                 case 14:
-                                    writer.Write($"HOME_PENALTY1_TIME={text}\n");
-                                        log += $"HOME_PENALTY1_TIME={text}\n";
+                                    log += $"HOME_PENALTY1_TIME={text}\n";
                                     break;
                                 case 16:
-                                    writer.Write($"HOME_PENALTY2_NUM={text}\n");
                                     log += $"HOME_PENALTY2_NUM={text}\n";
                                     break;
                                 case 18:
-                                    writer.Write($"HOME_PENALTY2_TIME={text}\n");
                                     log += $"HOME_PENALTY2_TIME={text}\n";
                                     break;
                                 case 20:
-                                    writer.Write($"GUEST_PENALTY1_NUM={text}\n");
                                     log += $"GUEST_PENALTY1_NUM={text}\n";
                                     break;
                                 case 22:
-                                    writer.Write($"GUEST_PENALTY1_TIME={text}\n");
                                     log += $"GUEST_PENALTY1_TIME={text}\n";
                                     break;
                                 case 24:
-                                    writer.Write($"GUEST_PENALTY2_NUM={text}\n");
                                     log += $"GUEST_PENALTY2_NUM={text}\n";
                                     break;
                                 case 26:
-                                    writer.Write($"GUEST_PENALTY2_TIME={text}\n");
                                     log += $"GUEST_PENALTY2_TIME={text}\n";
                                     break;
                             }
@@ -127,18 +120,30 @@ internal class MainService : IMainService
                         i++;
                     }
                     if (log != "")
-                        model.Log = log + "\n" + model.Log;
-                    writer.Close();
+                    {
+                        log = $"Timestamp: {DateTime.Now}\n{log}";
+                        if (model.IsAppend)
+                            model.Log = log + "\n" + model.Log;
+                        else
+                            model.Log = log;
+                        writer.WriteLine(log);
+                    }
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         model.Frame = mat.ToBitmapSource();
+                        model.CleanFrame = frame.ToBitmapSource();
                     });
 
                     if (videoCapture.CaptureType == CaptureType.File)
-                        for (int i = 0; i < fps && videoCapture.PosFrames < videoCapture.FrameCount - 1; i++)
+                        for (int i = 0; i < (fps / model.Fps) && videoCapture.PosFrames < videoCapture.FrameCount - 1; i++)
                             videoCapture.Read(frame);
+
+                    stopwatch.Stop();
+                    if ((int)(1000 / model.Fps) - (int)stopwatch.ElapsedMilliseconds > 0)
+                        Thread.Sleep((int)(1000 / model.Fps) - (int)stopwatch.ElapsedMilliseconds);
                 }
+                writer.Close();
             }
         );
     }
