@@ -2,6 +2,7 @@
 using Scoreboard.Modules.Main.Models.Abstractions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Management;
 using System.Windows;
 using System.Windows.Media;
@@ -51,6 +52,13 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _isResizing, value);
     }
 
+    private ObservableCollection<bool> _exists = new ObservableCollection<bool>() { false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+    public ObservableCollection<bool> Exists
+    {
+        get => _exists;
+        set => SetProperty(ref _exists, value);
+    }
+
     private ObservableCollection<Brush> _textColor = new ObservableCollection<Brush>() { Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White };
     public ObservableCollection<Brush> TextColor
     {
@@ -75,6 +83,9 @@ internal class MainModel : BindableBase, IMainModel
                 cameraNames.Add(device["Caption"].ToString());
             }
         }
+
+        if (!cameraNames.Any())
+            MessageBox.Show("Устройства не обнаружены, проверьте подключение устройства и перезапустите приложение");
 
         return cameraNames;
     }
@@ -133,5 +144,12 @@ internal class MainModel : BindableBase, IMainModel
     {
         get => _fpsDecreaseEnabled;
         set => SetProperty(ref _fpsDecreaseEnabled, value);
+    }
+
+    private bool _isDetectionEnabled = false;
+    public bool IsDetectionEnabled
+    {
+        get => _isDetectionEnabled;
+        set => SetProperty(ref _isDetectionEnabled, value);
     }
 }

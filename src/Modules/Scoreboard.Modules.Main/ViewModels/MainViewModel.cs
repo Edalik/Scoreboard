@@ -9,6 +9,7 @@ using Scoreboard.Modules.Main.Models.Abstractions;
 using Scoreboard.Modules.Main.Services;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -26,12 +27,13 @@ class MainViewModel
     public ICommand CameraCommand { get; }
     public ICommand FpsIncreaseCommand { get; }
     public ICommand FpsDecreaseCommand { get; }
-    public DelegateCommand<string?> ChooseRegionCommand { get; set; }
+    public ICommand ChooseRegionCommand { get; set; }
     public ICommand MouseDownCommand { get; }
     public ICommand MouseUpCommand { get; }
     public ICommand MouseMoveCommand { get; }
     public ICommand ResizeCommand { get; }
     public ICommand ClearLogCommand { get; }
+    public ICommand DeleteRegionCommand { get; }
     public ICommand SaveLogCommand { get; }
     public ICommand SaveSettingsCommand { get; }
     public ICommand LoadSettingsCommand { get; }
@@ -55,6 +57,7 @@ class MainViewModel
 
         ChooseRegionCommand = new DelegateCommand<string?>(ChooseRegion);
         ResizeCommand = new DelegateCommand<string?>(Resize);
+        DeleteRegionCommand = new DelegateCommand<string?>(DeleteRegion);
 
         MouseDownCommand = ReactiveCommand.Create
         (
@@ -197,10 +200,12 @@ class MainViewModel
                     if (Model.Points[choosingID + 1].X - Model.Points[choosingID].X < 10 || Model.Points[choosingID + 1].Y - Model.Points[choosingID].Y < 10)
                     {
                         Model.Points[choosingID] = default;
+                        Model.Exists[choosingID / 2] = false;
                         return;
                     }
 
                     Model.IsChecked[choosingID / 2] = true;
+                    Model.Exists[choosingID / 2] = true;
                     choosingID = -1;
                 }
                 else if (isResizing)
@@ -223,7 +228,13 @@ class MainViewModel
                     }
 
                     if (Model.Points[choosingID + 1].X - Model.Points[choosingID].X < 10 || Model.Points[choosingID + 1].Y - Model.Points[choosingID].Y < 10)
+                    {
                         Model.Points[choosingID] = default;
+                        Model.Exists[choosingID / 2] = false;
+                        Model.IsChecked[choosingID / 2] = false;
+                        Model.IsResizing[choosingID / 2] = false;
+                        Model.TextColor[choosingID / 2] = Brushes.White;
+                    }
                 }
             }
         );
@@ -263,6 +274,9 @@ class MainViewModel
                 {
                     await lastReadingTask;
                 }
+
+                if (!Model.CameraSettings.Any())
+                    return;
 
                 lastReadingTask = ReadFile(LastTokenSource.Token, new VideoCapture(Model.CameraSetting));
                 await lastReadingTask;
@@ -332,6 +346,8 @@ class MainViewModel
                 {
                     Model.Points[i].X = Convert.ToDouble(reader.ReadLine());
                     Model.Points[i].Y = Convert.ToDouble(reader.ReadLine());
+                    if (i % 2 == 0 && Model.Points[i / 2].X != default)
+                        Model.Exists[i / 2] = true;
                 }
                 for (int i = 0; i < 14; i++)
                 {
@@ -361,6 +377,20 @@ class MainViewModel
                     Model.Fps--;
             }
         );
+    }
+
+    private void DeleteRegion(string? parameter)
+    {
+        Mouse.OverrideCursor = null;
+        Model.TextColor[choosingID / 2] = Brushes.White;
+        Model.IsResizing[choosingID / 2] = false;
+        Model.IsChoosing[choosingID / 2] = false;
+        choosingID = Convert.ToInt32(parameter);
+        Model.IsChecked[choosingID / 2] = false;
+        Model.Points[choosingID] = default;
+        isResizing = false;
+        isChoosing = false;
+        Model.Exists[choosingID / 2] = false;
     }
 
     private void ChooseRegion(string? parameter)

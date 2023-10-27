@@ -49,7 +49,7 @@ internal class MainService : IMainService
                             else
                                 mat.Rectangle(new OpenCvSharp.Point(model.Points[i].X, model.Points[i].Y), new OpenCvSharp.Point(model.Points[i + 1].X, model.Points[i + 1].Y), Scalar.White, 1);
                         }
-                        if (model.IsChecked[i / 2] && model.Points[i] != default)
+                        if (model.IsDetectionEnabled && model.IsChecked[i / 2] && model.Points[i] != default)
                         {
                             tmp = matg.Clone().SubMat(new OpenCvSharp.Rect((int)model.Points[i].X, (int)model.Points[i].Y, (int)model.Points[i + 1].X - (int)model.Points[i].X, (int)model.Points[i + 1].Y - (int)model.Points[i].Y));
                             //mat.Circle((int)model.Points[i].X, (int)model.Points[i].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
