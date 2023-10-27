@@ -8,10 +8,9 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
         Title="MainWindow"
-        Width="1280"
-        Height="720"
+        Width="1920"
+        Height="1080"
         WindowState="Maximized"
-        ResizeMode="NoResize"
         Style="{StaticResource MaterialDesignWindow}">
     <Grid>
         <ContentControl prism:RegionManager.RegionName="MainRegion"/>

@@ -91,9 +91,6 @@ internal class MainModel : BindableBase, IMainModel
             }
         }
 
-        if (!cameraNames.Any())
-            MessageBox.Show("Устройства не обнаружены, проверьте подключение устройства и перезапустите приложение");
-
         return cameraNames;
     }
 

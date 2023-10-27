@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -20,7 +21,7 @@ using System.Windows.Media.Imaging;
 
 namespace Scoreboard.Modules.Main.ViewModels;
 
-class MainViewModel
+class MainViewModel : ReactiveObject
 {
     private readonly IMainService _mainService;
     public IMainModel Model { get; }
@@ -40,6 +41,8 @@ class MainViewModel
     public ICommand LoadSettingsCommand { get; }
 
     [Reactive] public CancellationTokenSource LastTokenSource { get; set; }
+    [Reactive] public bool IsLeftMenuOpen { get; set; }
+    [Reactive] public bool IsRightMenuOpen { get; set; } = true;
     private Task lastReadingTask;
 
     public int choosingID = -1;
@@ -280,7 +283,10 @@ class MainViewModel
                 }
 
                 if (!Model.CameraSettings.Any())
+                {
+                    MessageBox.Show("Устройства не обнаружены, проверьте подключение устройства и перезапустите приложение");
                     return;
+                }
 
                 lastReadingTask = ReadFile(LastTokenSource.Token, new VideoCapture(Model.CameraSetting));
                 await lastReadingTask;

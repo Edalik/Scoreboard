@@ -11,8 +11,8 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
-             d:DesignWidth="1280"
-             d:DesignHeight="720"
+             d:DesignWidth="1920"
+             d:DesignHeight="1080"
              d:DataContext="{d:DesignInstance vm:MainViewModel}"
              Style="{StaticResource MaterialDesignUserControl}">
     <Grid>
@@ -20,10 +20,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ToolBarTray
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="2">
+        <ToolBarTray Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <ToolBar ClipToBounds="False" Style="{StaticResource MaterialDesignToolBar}">
                 <Menu>
                     <MenuItem Command="{Binding ChooseFileCommand}" Header="Файл"/>
@@ -31,516 +28,538 @@
                 </Menu>
             </ToolBar>
         </ToolBarTray>
-        <Grid Grid.Row="1" Focusable="True">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="6*"/>
-                <ColumnDefinition Width="2*"/>
-            </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="1">
+            <md:DrawerHost IsLeftDrawerOpen="{Binding IsLeftMenuOpen}" IsRightDrawerOpen="{Binding IsRightMenuOpen}" OpenMode="Standard">
 
-            <GroupBox Header="Лог выполнения">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Label Content="Способ сохранения" Foreground="Gray"/>
-
-                    <ComboBox Grid.Row="1" ItemsSource="{Binding Model.SaveSettings}" SelectedItem="{Binding Model.SaveSetting}"/>
-
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Label Content="Добавлять в конец" VerticalAlignment="Center"/>
-                        <ToggleButton IsChecked="{Binding Model.IsAppend}" Margin="10, 10, 10, 10" Grid.Column="1" Cursor="Hand"/>
-                    </Grid>
-
-                    <Grid Grid.Row="3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Label Content="Сохранить лог" VerticalAlignment="Center"/>
-                        <Button Grid.Column="1"
-                                BorderThickness="0"
-                                Margin="10"
-                                Content="{md:PackIcon Kind=FloppyDisc}"
-                                Style="{StaticResource IconButton}"
-                                Command="{Binding SaveLogCommand}"
-                                Cursor="Hand"/>
-                    </Grid>
-                    <Border BorderThickness="2, 2, 2, 2" BorderBrush="Gray" Grid.Row="4">
-                        <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <TextBox TextWrapping="Wrap" Text="{Binding Model.Log}" IsReadOnly="True"/>
-                        </ScrollViewer>
-                    </Border>
-
-                    <Border Grid.Row="5">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Content="Очистить лог" VerticalAlignment="Center"/>
-                            <Button Grid.Column="1"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding ClearLogCommand}"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"/>
-                        </Grid>
-                    </Border>
-                </Grid>
-            </GroupBox>
-
-            <Grid Grid.Column="1" x:Name="Grid">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid Margin="10, 10, 10, 10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    
-
-                    <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-
-                        <Label Content="Выбор камеры                    " Foreground="Gray"/>
-                        <ComboBox Grid.Row="1" ItemsSource="{Binding Model.CameraSettings}" SelectedIndex="{Binding Model.CameraSetting}"/>
-                    </Grid>
-
-
-                    <Grid Grid.Column="1" Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-
-                        <Label Grid.Column="1" Content="Частота, сек" Foreground="Gray"/>
-                        <Grid Grid.Column="1" Grid.Row="1" Cursor="">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBox TextAlignment="Right" Text="{Binding Model.Fps}" IsReadOnly="True"/>
-                            <Button Grid.Column="1" Content="{md:PackIcon Kind=ExpandLess}" Style="{StaticResource IconButton}" Margin="0" Command="{Binding FpsIncreaseCommand}"/>
-                            <Button Grid.Column="2" Content="{md:PackIcon Kind=ExpandMore}" Style="{StaticResource IconButton}" Margin="0" Command="{Binding FpsDecreaseCommand}"/>
-                        </Grid>
-                    </Grid>
-
-                    <Grid Grid.Column="2" Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-
-                        <Label VerticalAlignment="Center" Content="Распознавание " Foreground="Gray"/>
-                        <ToggleButton Grid.Column="1" IsChecked="{Binding Model.IsDetectionEnabled}" Cursor="Hand"/>
-                    </Grid>
-                </Grid>
-                
-                <Image Grid.Row="1"
-                       Margin="65,0,65,0"
-                       Source="{Binding Model.Frame}"
-                       x:Name="image">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseUp">
-                            <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="MouseMove">
-                            <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="MouseDown">
-                            <i:InvokeCommandAction Command="{Binding MouseDownCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Image>
-            </Grid>
-
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <GroupBox Header="Зоны распознавания">
-                    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <md:DrawerHost.LeftDrawerContent>
+                    <GroupBox Header="Лог выполнения">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
+
+                            <Label Content="Способ сохранения" Foreground="Gray"/>
+
+                            <ComboBox Padding="3" Grid.Row="1" ItemsSource="{Binding Model.SaveSettings}" SelectedItem="{Binding Model.SaveSetting}"/>
+
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Content="Добавлять в конец" VerticalAlignment="Center"/>
+                                <ToggleButton IsChecked="{Binding Model.IsAppend}" Margin="10, 10, 10, 10" Grid.Column="1" Cursor="Hand"/>
+                            </Grid>
+
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Content="Сохранить лог" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1"
+                                        BorderThickness="0"
+                                        Margin="10"
+                                        Content="{md:PackIcon Kind=FloppyDisc}"
+                                        Style="{StaticResource IconButton}"
+                                        Command="{Binding SaveLogCommand}"
+                                        Cursor="Hand"/>
+                            </Grid>
+                            <Border BorderThickness="2, 2, 2, 2" BorderBrush="Gray" Grid.Row="4">
+                                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                    <TextBox Margin="5" TextWrapping="Wrap" Text="{Binding Model.Log}" IsReadOnly="True"/>
+                                </ScrollViewer>
+                            </Border>
+
+                            <Border Grid.Row="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Очистить лог" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="1"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding ClearLogCommand}"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </GroupBox>
+                </md:DrawerHost.LeftDrawerContent>
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <ToggleButton Grid.Row="0"
+                                  Grid.Column="0"
+                                  Margin="15"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Top"
+                                  AutomationProperties.Name="HamburgerToggleButton"
+                                  IsChecked="{Binding IsLeftMenuOpen}"
+                                  Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                  ToolTip="Открыть Лог выполнения"
+                                  Cursor="Hand"/>
+
+                    <ToggleButton Grid.Row="0"
+                                  Grid.Column="3"
+                                  Margin="15"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Top"
+                                  AutomationProperties.Name="HamburgerToggleButton"
+                                  IsChecked="{Binding IsRightMenuOpen}"
+                                  RenderTransformOrigin="0.5,0.5"
+                                  Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                  ToolTip="Открыть Зоны распознавания"
+                                  Cursor="Hand">
+                        <ToggleButton.RenderTransform>
+                            <ScaleTransform ScaleX="-1" />
+                        </ToggleButton.RenderTransform>
+                    </ToggleButton>
+                    <Grid Margin="75, 10, 10, 10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Label Content="Выбор камеры                    " Foreground="Gray"/>
+                            <ComboBox Padding="3" Grid.Row="1" ItemsSource="{Binding Model.CameraSettings}" SelectedIndex="{Binding Model.CameraSetting}"/>
+                        </Grid>
+
+                        <Grid Grid.Column="1" Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="1" Content="Частота, сек" Foreground="Gray"/>
+                            <Grid Grid.Column="1" Grid.Row="1" Cursor="">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Padding="3" TextAlignment="Right" Text="{Binding Model.Fps}" IsReadOnly="True"/>
+                                <Button Grid.Column="1" Content="{md:PackIcon Kind=ExpandLess}" Style="{StaticResource IconButton}" Margin="0" Command="{Binding FpsIncreaseCommand}"/>
+                                <Button Grid.Column="2" Content="{md:PackIcon Kind=ExpandMore}" Style="{StaticResource IconButton}" Margin="0" Command="{Binding FpsDecreaseCommand}"/>
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Column="2" Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Label Content="Наименование" HorizontalAlignment="Center"/>
-                            <Label Grid.Column="1" Content="Включено" HorizontalAlignment="Center"/>
-                            <Label Grid.Column="2" Content="Создать/Редактировать" HorizontalAlignment="Center" Cursor=""/>
-                            <Label Grid.Column="3" Content="Удалить" HorizontalAlignment="Center"/>
 
-                            <Label Grid.Row="1" Grid.Column="0" Content="Команда Хозяев" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[0]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="0"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[0]}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[0]}" Command="{Binding ChooseRegionCommand}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="1"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="0"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[0]}"/>
-
-                            <Label Grid.Row="2" Grid.Column="0" Content="Команда Гостей" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[1]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="2"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[1]}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[1]}" Command="{Binding ChooseRegionCommand}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="2"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="2"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[1]}"/>
-
-                            <Label Grid.Row="3" Grid.Column="0" Content="Период" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[2]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="4"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[2]}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[2]}" Command="{Binding ChooseRegionCommand}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="3"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="4"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[2]}"/>
-
-                            <Label Grid.Row="4" Grid.Column="0" Content="Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[3]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="6"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[3]}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[3]}" Command="{Binding ChooseRegionCommand}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="4"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="6"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[3]}"/>
-
-                            <Label Grid.Row="5" Grid.Column="0" Content="Счет Хозяева" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[4]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="8"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[4]}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[4]}" Command="{Binding ChooseRegionCommand}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="5"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="8"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[4]}"/>
-
-                            <Label Grid.Row="6" Grid.Column="0" Content="Счет Гости" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[5]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="10"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[5]}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[5]}" Command="{Binding ChooseRegionCommand}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="6"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="10"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[5]}"/>
-
-                            <Label Grid.Row="7" Grid.Column="0" Content="Удаление Хозяев 1 Номер игрока" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[6]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="12"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[6]}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[6]}" Command="{Binding ChooseRegionCommand}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="7"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="12"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[6]}"/>
-
-                            <Label Grid.Row="8" Grid.Column="0" Content="Удаление Хозяев 1 Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[7]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="14"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[7]}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[7]}" Command="{Binding ChooseRegionCommand}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="8"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="14"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[7]}"/>
-
-                            <Label Grid.Row="9" Grid.Column="0" Content="Удаление Хозяев 2 Номер игрока" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[8]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="16"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[8]}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[8]}" Command="{Binding ChooseRegionCommand}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="9"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="16"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[8]}"/>
-
-                            <Label Grid.Row="10" Grid.Column="0" Content="Удаление Хозяев 2 Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[9]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="18"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[9]}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[9]}" Command="{Binding ChooseRegionCommand}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="10"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="18"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[9]}"/>
-
-                            <Label Grid.Row="11" Grid.Column="0" Content="Удаление Гости 1 Номер игрока" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[10]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="20"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[10]}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[10]}" Command="{Binding ChooseRegionCommand}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="11"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="20"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[10]}"/>
-
-                            <Label Grid.Row="12" Grid.Column="0" Content="Удаление Гости 1 Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[11]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="22"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[11]}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[11]}" Command="{Binding ChooseRegionCommand}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="12"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="22"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[11]}"/>
-
-                            <Label Grid.Row="13" Grid.Column="0" Content="Удаление Гости 2 Номер игрока" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[12]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="24"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[12]}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[12]}" Command="{Binding ChooseRegionCommand}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="13"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="24"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[12]}"/>
-
-                            <Label Grid.Row="14" Grid.Column="0" Content="Удаление Гости 2 Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[13]}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="26"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Label>
-                            <ToggleButton IsChecked="{Binding Model.IsChecked[13]}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="1" Cursor="Hand"/>
-                            <Button Content="{Binding Model.ButtonAction[13]}" Command="{Binding ChooseRegionCommand}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="2" Cursor="Hand"/>
-                            <Button Grid.Row="14"
-                                    Grid.Column="3"
-                                    Margin="0"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DeleteRegionCommand}"
-                                    CommandParameter="26"
-                                    Content="{md:PackIcon Kind=Trash, Size=18}"
-                                    Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
-                                    Cursor="Hand"
-                                    IsEnabled="{Binding Model.Exists[13]}"/>
+                            <Label VerticalAlignment="Center" Content="Распознавание " Foreground="Gray"/>
+                            <ToggleButton Grid.Column="1" IsChecked="{Binding Model.IsDetectionEnabled}" Cursor="Hand"/>
                         </Grid>
-                    </ScrollViewer>
-                </GroupBox>
-                <GroupBox Grid.Row="1" Header="Параметры сохранения">
+                    </Grid>
+
+                    <Image Grid.Row="1" Margin="65,0,65,0" Source="{Binding Model.Frame}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseUp">
+                                <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseMove">
+                                <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseDown">
+                                <i:InvokeCommandAction Command="{Binding MouseDownCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Image>
+                </Grid>
+                
+                <md:DrawerHost.RightDrawerContent>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Content="Сохранение настроек" VerticalAlignment="Center"/>
-                        <Button Grid.Column="1"
-                                BorderThickness="0"
-                                Margin="10"
-                                Content="{md:PackIcon Kind=FloppyDisc}"
-                                Style="{StaticResource IconButton}"
-                                Command="{Binding SaveSettingsCommand}"
-                                Cursor="Hand"/>
+                        <GroupBox Header="Зоны распознавания">
+                            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Наименование" HorizontalAlignment="Center"/>
+                                    <Label Grid.Column="1" Content="Включено" HorizontalAlignment="Center"/>
+                                    <Label Grid.Column="2" Content="Создать/Редактировать" HorizontalAlignment="Center" Cursor=""/>
+                                    <Label Grid.Column="3" Content="Удалить" HorizontalAlignment="Center"/>
 
-                        <Label Grid.Row="1" Content="Загрузка настроек" VerticalAlignment="Center"/>
-                        <Button Grid.Row="1"
-                                Grid.Column="1"
-                                BorderThickness="0"
-                                Margin="10"
-                                Content="{md:PackIcon Kind=PlusBold}"
-                                Command="{Binding LoadSettingsCommand}"
-                                Cursor="Hand"/>
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Команда Хозяев" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[0]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="0"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[0]}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[0]}" Command="{Binding ChooseRegionCommand}" CommandParameter="0" Margin="10, 10, 10, 10" Grid.Row="1" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="1"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="0"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[0]}"/>
+
+                                    <Label Grid.Row="2" Grid.Column="0" Content="Команда Гостей" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[1]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="2"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[1]}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[1]}" Command="{Binding ChooseRegionCommand}" CommandParameter="2" Margin="10, 10, 10, 10" Grid.Row="2" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="2"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="2"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[1]}"/>
+
+                                    <Label Grid.Row="3" Grid.Column="0" Content="Период" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[2]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="4"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[2]}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[2]}" Command="{Binding ChooseRegionCommand}" CommandParameter="4" Margin="10, 10, 10, 10" Grid.Row="3" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="3"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="4"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[2]}"/>
+
+                                    <Label Grid.Row="4" Grid.Column="0" Content="Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[3]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="6"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[3]}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[3]}" Command="{Binding ChooseRegionCommand}" CommandParameter="6" Margin="10, 10, 10, 10" Grid.Row="4" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="4"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="6"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[3]}"/>
+
+                                    <Label Grid.Row="5" Grid.Column="0" Content="Счет Хозяева" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[4]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="8"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[4]}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[4]}" Command="{Binding ChooseRegionCommand}" CommandParameter="8" Margin="10, 10, 10, 10" Grid.Row="5" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="5"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="8"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[4]}"/>
+
+                                    <Label Grid.Row="6" Grid.Column="0" Content="Счет Гости" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[5]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="10"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[5]}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[5]}" Command="{Binding ChooseRegionCommand}" CommandParameter="10" Margin="10, 10, 10, 10" Grid.Row="6" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="6"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="10"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[5]}"/>
+
+                                    <Label Grid.Row="7" Grid.Column="0" Content="Удаление Хозяев 1 Номер игрока" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[6]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="12"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[6]}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[6]}" Command="{Binding ChooseRegionCommand}" CommandParameter="12" Margin="10, 10, 10, 10" Grid.Row="7" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="7"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="12"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[6]}"/>
+
+                                    <Label Grid.Row="8" Grid.Column="0" Content="Удаление Хозяев 1 Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[7]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="14"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[7]}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[7]}" Command="{Binding ChooseRegionCommand}" CommandParameter="14" Margin="10, 10, 10, 10" Grid.Row="8" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="8"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="14"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            IsEnabled="{Binding Model.Exists[7]}"/>
+
+                                    <Label Grid.Row="9" Grid.Column="0" Content="Удаление Хозяев 2 Номер игрока" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[8]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="16"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[8]}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[8]}" Command="{Binding ChooseRegionCommand}" CommandParameter="16" Margin="10, 10, 10, 10" Grid.Row="9" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="9"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="16"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[8]}"/>
+
+                                    <Label Grid.Row="10" Grid.Column="0" Content="Удаление Хозяев 2 Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[9]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="18"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[9]}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[9]}" Command="{Binding ChooseRegionCommand}" CommandParameter="18" Margin="10, 10, 10, 10" Grid.Row="10" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="10"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="18"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[9]}"/>
+
+                                    <Label Grid.Row="11" Grid.Column="0" Content="Удаление Гости 1 Номер игрока" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[10]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="20"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[10]}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[10]}" Command="{Binding ChooseRegionCommand}" CommandParameter="20" Margin="10, 10, 10, 10" Grid.Row="11" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="11"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="20"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[10]}"/>
+
+                                    <Label Grid.Row="12" Grid.Column="0" Content="Удаление Гости 1 Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[11]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="22"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[11]}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[11]}" Command="{Binding ChooseRegionCommand}" CommandParameter="22" Margin="10, 10, 10, 10" Grid.Row="12" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="12"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="22"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            IsEnabled="{Binding Model.Exists[11]}"/>
+
+                                    <Label Grid.Row="13" Grid.Column="0" Content="Удаление Гости 2 Номер игрока" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[12]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="24"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[12]}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[12]}" Command="{Binding ChooseRegionCommand}" CommandParameter="24" Margin="10, 10, 10, 10" Grid.Row="13" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="13"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="24"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[12]}"/>
+
+                                    <Label Grid.Row="14" Grid.Column="0" Content="Удаление Гости 2 Время" VerticalAlignment="Center" Cursor="Hand" Foreground="{Binding Model.TextColor[13]}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDown">
+                                                <i:InvokeCommandAction Command="{Binding ResizeCommand}" CommandParameter="26"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
+                                    <ToggleButton IsChecked="{Binding Model.IsChecked[13]}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="1" Cursor="Hand"/>
+                                    <Button Content="{Binding Model.ButtonAction[13]}" Command="{Binding ChooseRegionCommand}" CommandParameter="26" Margin="10, 10, 10, 10" Grid.Row="14" Grid.Column="2" Cursor="Hand"/>
+                                    <Button Grid.Row="14"
+                                            Grid.Column="3"
+                                            Margin="0"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DeleteRegionCommand}"
+                                            CommandParameter="26"
+                                            Content="{md:PackIcon Kind=Trash, Size=18}"
+                                            Foreground="{DynamicResource MaterialDesignValidationErrorBrush}"
+                                            Cursor="Hand"
+                                            IsEnabled="{Binding Model.Exists[13]}"/>
+                                </Grid>
+                            </ScrollViewer>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="Параметры сохранения">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Сохранение настроек" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1"
+                                        BorderThickness="0"
+                                        Margin="10"
+                                        Content="{md:PackIcon Kind=FloppyDisc}"
+                                        Style="{StaticResource IconButton}"
+                                        Command="{Binding SaveSettingsCommand}"
+                                        Cursor="Hand"/>
+
+                                <Label Grid.Row="1" Content="Загрузка настроек" VerticalAlignment="Center"/>
+                                <Button Grid.Row="1"
+                                        Grid.Column="1"
+                                        BorderThickness="0"
+                                        Margin="10"
+                                        Content="{md:PackIcon Kind=PlusBold}"
+                                        Command="{Binding LoadSettingsCommand}"
+                                        Cursor="Hand"/>
+                            </Grid>
+                        </GroupBox>
                     </Grid>
-                </GroupBox>
-            </Grid>
-        </Grid>
-
+                </md:DrawerHost.RightDrawerContent>
+                
+            </md:DrawerHost>
+        </DockPanel>
     </Grid>
 </UserControl>
