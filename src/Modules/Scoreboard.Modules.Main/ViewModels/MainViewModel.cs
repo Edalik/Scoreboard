@@ -257,6 +257,7 @@ class MainViewModel : ReactiveObject
                     {
                         return;
                     }
+                    Model.Frame = null;
                 }
 
                 LastTokenSource?.Cancel();
@@ -290,6 +291,7 @@ class MainViewModel : ReactiveObject
                     {
                         return;
                     }
+                    Model.Frame = null;
                 }
 
                 LastTokenSource?.Cancel();
