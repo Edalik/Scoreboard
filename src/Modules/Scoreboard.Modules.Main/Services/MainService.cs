@@ -52,10 +52,6 @@ internal class MainService : IMainService
                         if (model.IsDetectionEnabled && model.IsChecked[i / 2] && model.Points[i] != default)
                         {
                             tmp = matg.Clone().SubMat(new OpenCvSharp.Rect((int)model.Points[i].X, (int)model.Points[i].Y, (int)model.Points[i + 1].X - (int)model.Points[i].X, (int)model.Points[i + 1].Y - (int)model.Points[i].Y));
-                            //mat.Circle((int)model.Points[i].X, (int)model.Points[i].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
-                            //mat.Circle((int)model.Points[i + 1].X, (int)model.Points[i + 1].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
-                            //mat.Circle((int)model.Points[i + 1].X, (int)model.Points[i].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
-                            //mat.Circle((int)model.Points[i].X, (int)model.Points[i + 1].Y, 1, Scalar.Red, -1, LineTypes.AntiAlias);
                             string text = "";
                             try
                             {

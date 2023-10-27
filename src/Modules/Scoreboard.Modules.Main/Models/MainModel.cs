@@ -59,6 +59,13 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _exists, value);
     }
 
+    private ObservableCollection<string> _buttonAction = new ObservableCollection<string>() { "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать" };
+    public ObservableCollection<string> ButtonAction
+    {
+        get => _buttonAction;
+        set => SetProperty(ref _buttonAction, value);
+    }
+
     private ObservableCollection<Brush> _textColor = new ObservableCollection<Brush>() { Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White };
     public ObservableCollection<Brush> TextColor
     {

@@ -11,6 +11,7 @@
         Width="1280"
         Height="720"
         WindowState="Maximized"
+        ResizeMode="NoResize"
         Style="{StaticResource MaterialDesignWindow}">
     <Grid>
         <ContentControl prism:RegionManager.RegionName="MainRegion"/>

@@ -14,6 +14,7 @@ internal interface IMainModel
     ObservableCollection<bool> IsChoosing { get; set; }
     ObservableCollection<bool> IsResizing { get; set; }
     ObservableCollection<bool> Exists { get; set; }
+    ObservableCollection<string> ButtonAction { get; set; }
     ObservableCollection<Brush> TextColor { get; set; }
     List<string> CameraSettings { get; set; }
     int CameraSetting { get; set; }

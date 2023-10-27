@@ -10,6 +10,7 @@ using Scoreboard.Modules.Main.Services;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -201,11 +202,13 @@ class MainViewModel
                     {
                         Model.Points[choosingID] = default;
                         Model.Exists[choosingID / 2] = false;
+                        Model.ButtonAction[choosingID / 2] = "Создать";
                         return;
                     }
 
                     Model.IsChecked[choosingID / 2] = true;
                     Model.Exists[choosingID / 2] = true;
+                    Model.ButtonAction[choosingID / 2] = "Редактировать";
                     choosingID = -1;
                 }
                 else if (isResizing)
@@ -234,6 +237,7 @@ class MainViewModel
                         Model.IsChecked[choosingID / 2] = false;
                         Model.IsResizing[choosingID / 2] = false;
                         Model.TextColor[choosingID / 2] = Brushes.White;
+                        Model.ButtonAction[choosingID / 2] = "Создать";
                     }
                 }
             }
@@ -347,7 +351,10 @@ class MainViewModel
                     Model.Points[i].X = Convert.ToDouble(reader.ReadLine());
                     Model.Points[i].Y = Convert.ToDouble(reader.ReadLine());
                     if (i % 2 == 0 && Model.Points[i / 2].X != default)
+                    {
                         Model.Exists[i / 2] = true;
+                        Model.ButtonAction[i / 2] = "Редактировать";
+                    }
                 }
                 for (int i = 0; i < 14; i++)
                 {
@@ -391,15 +398,21 @@ class MainViewModel
         isResizing = false;
         isChoosing = false;
         Model.Exists[choosingID / 2] = false;
+        Model.ButtonAction[choosingID / 2] = "Создать";
     }
 
     private void ChooseRegion(string? parameter)
     {
-        Model.IsResizing[choosingID / 2] = false;
-        isResizing = false;
-        Model.TextColor[choosingID / 2] = Brushes.White;
-        choosingID = Convert.ToInt32(parameter);
-        Mouse.OverrideCursor = Cursors.Cross;
+        if (Model.ButtonAction[Convert.ToInt32(parameter) / 2] == "Создать")
+        {
+            Model.IsResizing[choosingID / 2] = false;
+            isResizing = false;
+            Model.TextColor[choosingID / 2] = Brushes.White;
+            choosingID = Convert.ToInt32(parameter);
+            Mouse.OverrideCursor = Cursors.Cross;
+        }
+        else
+            Resize(parameter);
     }
 
     private void Resize(string? parameter)
