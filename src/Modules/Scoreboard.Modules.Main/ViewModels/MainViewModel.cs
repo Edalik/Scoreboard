@@ -250,6 +250,15 @@ class MainViewModel : ReactiveObject
         (
             async () =>
             {
+                if (lastReadingTask is not null)
+                {
+                    var Result = MessageBox.Show("Остановить текущее распознавание?", "Остановить текущее распознавание?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (Result == MessageBoxResult.No)
+                    {
+                        return;
+                    }
+                }
+
                 LastTokenSource?.Cancel();
                 LastTokenSource = new();
 
@@ -274,6 +283,15 @@ class MainViewModel : ReactiveObject
         (
             async () =>
             {
+                if (lastReadingTask is not null)
+                {
+                    var Result = MessageBox.Show("Остановить текущее распознавание?", "Остановить текущее распознавание?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (Result == MessageBoxResult.No)
+                    {
+                        return;
+                    }
+                }
+
                 LastTokenSource?.Cancel();
                 LastTokenSource = new();
 
