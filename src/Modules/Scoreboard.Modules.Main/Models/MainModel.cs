@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using MaterialDesignColors;
+using Prism.Mvvm;
 using Scoreboard.Modules.Main.Models.Abstractions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -115,6 +116,22 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _log, value);
     }
 
+    private string _detectionButtonText = "Начать распознавание";
+    public string DetectionButtonText
+
+    {
+        get => _detectionButtonText;
+        set => SetProperty(ref _detectionButtonText, value);
+    }
+    public static BrushConverter bc = new BrushConverter();
+    private Brush _detectionButtonColor = (Brush)bc.ConvertFrom("#03a9f4");
+    public Brush DetectionButtonColor
+
+    {
+        get => _detectionButtonColor;
+        set => SetProperty(ref _detectionButtonColor, value);
+    }
+
     private string[] _saveSettings = { "Текстовый файл", "Протокол" };
     public string[] SaveSettings
     {
@@ -122,8 +139,8 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _saveSettings, value);
     }
 
-    private string _saveSetting = "Текстовый файл";
-    public string SaveSetting
+    private int _saveSetting = 0;
+    public int SaveSetting
     {
         get => _saveSetting;
         set => SetProperty(ref _saveSetting, value);
@@ -143,17 +160,24 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _fpsIncreaseEnabled, value);
     }
 
-    private bool _fpsDecreaseEnabled = false;
+    private bool _fpsDecreaseEnabled;
     public bool FpsDecreaseEnabled
     {
         get => _fpsDecreaseEnabled;
         set => SetProperty(ref _fpsDecreaseEnabled, value);
     }
 
-    private bool _isDetectionEnabled = false;
+    private bool _isDetectionEnabled;
     public bool IsDetectionEnabled
     {
         get => _isDetectionEnabled;
         set => SetProperty(ref _isDetectionEnabled, value);
+    }
+
+    private bool _isAdvancedMode;
+    public bool IsAdvancedMode
+    {
+        get => _isAdvancedMode;
+        set => SetProperty(ref _isAdvancedMode, value);
     }
 }

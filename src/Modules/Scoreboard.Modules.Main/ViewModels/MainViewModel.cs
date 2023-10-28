@@ -25,8 +25,10 @@ class MainViewModel : ReactiveObject
 {
     private readonly IMainService _mainService;
     public IMainModel Model { get; }
+    public ICommand ChangeModeCommand { get; }
     public ICommand ChooseFileCommand { get; }
     public ICommand CameraCommand { get; }
+    public ICommand DetectionCommand { get; }
     public ICommand FpsIncreaseCommand { get; }
     public ICommand FpsDecreaseCommand { get; }
     public ICommand ChooseRegionCommand { get; set; }
@@ -39,10 +41,11 @@ class MainViewModel : ReactiveObject
     public ICommand SaveLogCommand { get; }
     public ICommand SaveSettingsCommand { get; }
     public ICommand LoadSettingsCommand { get; }
-
     [Reactive] public CancellationTokenSource LastTokenSource { get; set; }
     [Reactive] public bool IsLeftMenuOpen { get; set; }
-    [Reactive] public bool IsRightMenuOpen { get; set; } = true;
+    [Reactive] public bool IsRightMenuOpen { get; set; }
+    [Reactive] public Visibility IsVisible { get; set; } = Visibility.Hidden;
+
     private Task lastReadingTask;
 
     public int choosingID = -1;
@@ -59,6 +62,7 @@ class MainViewModel : ReactiveObject
         _mainService = new MainService();
         Model = new MainModel();
 
+        ChangeModeCommand = new DelegateCommand<string?>(ChangeMode);
         ChooseRegionCommand = new DelegateCommand<string?>(ChooseRegion);
         ResizeCommand = new DelegateCommand<string?>(Resize);
         DeleteRegionCommand = new DelegateCommand<string?>(DeleteRegion);
@@ -313,6 +317,26 @@ class MainViewModel : ReactiveObject
             }
         );
 
+        DetectionCommand = ReactiveCommand.Create
+        (
+            () =>
+            {
+                if (Model.IsDetectionEnabled)
+                {
+                    Model.IsDetectionEnabled = false;
+                    Model.DetectionButtonText = "Начать распознавание";
+                    BrushConverter bc = new BrushConverter();
+                    Model.DetectionButtonColor = (Brush)bc.ConvertFrom("#03a9f4");
+                }
+                else
+                {
+                    Model.IsDetectionEnabled = true;
+                    Model.DetectionButtonText = "Остановить распознавание";
+                    Model.DetectionButtonColor = Brushes.IndianRed;
+                }
+            }
+        );
+
         SaveLogCommand = ReactiveCommand.Create
         (
             () =>
@@ -410,6 +434,22 @@ class MainViewModel : ReactiveObject
                     Model.Fps--;
             }
         );
+    }
+
+    private void ChangeMode(string? parameter)
+    {
+        if (parameter == "0")
+        {
+            IsVisible = Visibility.Hidden;
+            IsLeftMenuOpen = IsRightMenuOpen = false;
+            Model.IsAdvancedMode = false;
+        }
+        else
+        {
+            IsVisible = Visibility.Visible;
+            IsLeftMenuOpen = IsRightMenuOpen = true;
+            Model.IsAdvancedMode = true;
+        }
     }
 
     private void DeleteRegion(string? parameter)

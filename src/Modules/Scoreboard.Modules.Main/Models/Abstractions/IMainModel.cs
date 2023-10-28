@@ -20,10 +20,13 @@ internal interface IMainModel
     int CameraSetting { get; set; }
     double Fps { get; set; }
     string Log { get; set; }
+    string DetectionButtonText { get; set; }
+    Brush DetectionButtonColor { get; set; }
     string[] SaveSettings { get; set; }
-    string SaveSetting { get; set; }
+    int SaveSetting { get; set; }
     bool IsAppend {  get; set; }
     bool FpsIncreaseEnabled { get; set; }
     bool FpsDecreaseEnabled { get; set; }
     bool IsDetectionEnabled { get; set; }
+    bool IsAdvancedMode { get; set; }
 }
