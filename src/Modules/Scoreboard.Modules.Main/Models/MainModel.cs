@@ -1,10 +1,7 @@
-﻿using DynamicData;
-using MaterialDesignColors;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using Scoreboard.Modules.Main.Models.Abstractions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Management;
 using System.Windows;
 using System.Windows.Media;
@@ -127,7 +124,7 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _cameraSetting, value);
     }
 
-    private double _fps = 1;
+    private double _fps = 2;
     public double Fps
     {
         get => _fps;

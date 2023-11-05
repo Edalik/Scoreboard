@@ -36,6 +36,40 @@ internal class MainService : IMainService
                     Cv2.CvtColor(matg, matg, ColorConversionCodes.BGR2GRAY);
                     Cv2.AdaptiveThreshold(matg, matg, 255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.BinaryInv, 21, -21);
                     string log = "";
+                    string[] texts = new string[19];
+                    Stopwatch time = Stopwatch.StartNew();
+                    Parallel.For(0, model.Points.Length / 2, index =>
+                    {
+                        int i = index * 2;
+                        if (model.IsDetectionEnabled && model.IsChecked[index] && model.Points[i] != default)
+                        {
+                            Mat tmp = matg.Clone().SubMat(new OpenCvSharp.Rect((int)model.Points[i].X, (int)model.Points[i].Y, (int)model.Points[i + 1].X - (int)model.Points[i].X, (int)model.Points[i + 1].Y - (int)model.Points[i].Y));
+                            string text = "";
+                            try
+                            {
+                                if (i < 4)
+                                {
+                                    TesseractEngine tesseractEngine = new TesseractEngine(@"./tessdata", "rus", EngineMode.Default);
+                                    tesseractEngine.DefaultPageSegMode = PageSegMode.SingleWord;
+                                    text = tesseractEngine.Process(Pix.LoadFromMemory(tmp.Clone().ToBytes())).GetText().Trim('\n');
+                                    text = Regex.Replace(text, "[^А-Яа-я]", "");
+                                    texts[index] = text;
+                                }
+                                else
+                                {
+                                    TesseractEngine tesseractEngineDigits = new TesseractEngine(@"./tessdata", "ssd", EngineMode.Default, "digits");
+                                    tesseractEngineDigits.DefaultPageSegMode = PageSegMode.RawLine;
+                                    text = tesseractEngineDigits.Process(Pix.LoadFromMemory(tmp.Clone().ToBytes())).GetText().Trim('\n');
+                                    text = Regex.Replace(text, "[^0-9]", "");
+                                    texts[index] = text;
+                                }
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+                    });
                     for (int i = 0; i < model.Points.Length; i++)
                     {
                         Mat tmp = new Mat();
@@ -52,30 +86,8 @@ internal class MainService : IMainService
                         }
                         if (model.IsDetectionEnabled && model.IsChecked[i / 2] && model.Points[i] != default)
                         {
-                            tmp = matg.Clone().SubMat(new OpenCvSharp.Rect((int)model.Points[i].X, (int)model.Points[i].Y, (int)model.Points[i + 1].X - (int)model.Points[i].X, (int)model.Points[i + 1].Y - (int)model.Points[i].Y));
-                            string text = "";
+                            string text = texts[i / 2];
                             StreamWriter logWriter;
-                            try
-                            {
-                                if (i < 4)
-                                {
-                                    TesseractEngine tesseractEngine = new TesseractEngine(@"./tessdata", "rus", EngineMode.Default);
-                                    tesseractEngine.DefaultPageSegMode = PageSegMode.SingleWord;
-                                    text = tesseractEngine.Process(Pix.LoadFromMemory(tmp.Clone().ToBytes())).GetText().Trim('\n');
-                                    text = Regex.Replace(text, "[^А-Яа-я]", "");
-                                }
-                                else
-                                {
-                                    TesseractEngine tesseractEngineDigits = new TesseractEngine(@"./tessdata", "ssd", EngineMode.Default, "digits");
-                                    tesseractEngineDigits.DefaultPageSegMode = PageSegMode.RawLine;
-                                    text = tesseractEngineDigits.Process(Pix.LoadFromMemory(tmp.Clone().ToBytes())).GetText().Trim('\n');
-                                    text = Regex.Replace(text, "[^0-9]", "");
-                                }
-                            }
-                            catch
-                            {
-
-                            }
                             switch (i)
                             {
                                 case 0:
@@ -196,6 +208,7 @@ internal class MainService : IMainService
                         }
                         i++;
                     }
+                    time.Stop();
                     if (log != "")
                     {
                         log = $"Timestamp: {DateTime.Now}\n{log}";
@@ -208,6 +221,7 @@ internal class MainService : IMainService
                             writer.WriteLine(log);
                         }
                     }
+                    model.Log = time.ElapsedMilliseconds + "\n" + model.Log;
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {

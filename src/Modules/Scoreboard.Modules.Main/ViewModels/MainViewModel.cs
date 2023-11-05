@@ -10,7 +10,6 @@ using Scoreboard.Modules.Main.Services;
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
