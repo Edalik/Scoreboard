@@ -62,12 +62,6 @@
     <None Update="tessdata\configs\digits">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="tessdata\digits.traineddata">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="tessdata\eng.traineddata">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="tessdata\rus.traineddata">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -88,6 +82,9 @@
   <ItemGroup>
     <None Update="C:\Users\Alik\.nuget\packages\tesseract.net.sdk\4.5.411\build\..\content\tessdata\pdf.ttx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="tessdata\ssd.traineddata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Untitled.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

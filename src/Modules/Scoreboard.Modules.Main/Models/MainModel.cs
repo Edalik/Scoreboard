@@ -1,4 +1,5 @@
-﻿using MaterialDesignColors;
+﻿using DynamicData;
+using MaterialDesignColors;
 using Prism.Mvvm;
 using Scoreboard.Modules.Main.Models.Abstractions;
 using System.Collections.Generic;
@@ -25,53 +26,77 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _frame, value);
     }
 
-    private Point[] _points = new Point[28];
+    private Point[] _points = new Point[38];
     public Point[] Points
     {
         get => _points;
         set => SetProperty(ref _points, value);
     }
 
-    private ObservableCollection<bool> _isChecked = new ObservableCollection<bool>() { false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+    private ObservableCollection<bool> _isChecked = BoolCollection();
     public ObservableCollection<bool> IsChecked
     {
         get => _isChecked;
         set => SetProperty(ref _isChecked, value);
     }
 
-    private ObservableCollection<bool> _isChoosing = new ObservableCollection<bool>() { false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+    private ObservableCollection<bool> _isChoosing = BoolCollection();
     public ObservableCollection<bool> IsChoosing
     {
         get => _isChoosing;
         set => SetProperty(ref _isChoosing, value);
     }
 
-    private ObservableCollection<bool> _isResizing = new ObservableCollection<bool>() { false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+    private ObservableCollection<bool> _isResizing = BoolCollection();
     public ObservableCollection<bool> IsResizing
     {
         get => _isResizing;
         set => SetProperty(ref _isResizing, value);
     }
 
-    private ObservableCollection<bool> _exists = new ObservableCollection<bool>() { false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+    private ObservableCollection<bool> _exists = BoolCollection();
     public ObservableCollection<bool> Exists
     {
         get => _exists;
         set => SetProperty(ref _exists, value);
     }
 
-    private ObservableCollection<string> _buttonAction = new ObservableCollection<string>() { "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать", "Создать" };
+    public static ObservableCollection<bool> BoolCollection()
+    {
+        var boolCollection = new ObservableCollection<bool>();
+        for (int i = 0; i < 19; i++)
+            boolCollection.Add(false);
+        return boolCollection;
+    }
+
+    private ObservableCollection<string> _buttonAction = ButtonActionCollection();
     public ObservableCollection<string> ButtonAction
     {
         get => _buttonAction;
         set => SetProperty(ref _buttonAction, value);
     }
 
-    private ObservableCollection<Brush> _textColor = new ObservableCollection<Brush>() { Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White, Brushes.White };
+    public static ObservableCollection<string> ButtonActionCollection()
+    {
+        var boolCollection = new ObservableCollection<string>();
+        for (int i = 0; i < 19; i++)
+            boolCollection.Add("Создать");
+        return boolCollection;
+    }
+
+    private ObservableCollection<Brush> _textColor = TextColorCollection();
     public ObservableCollection<Brush> TextColor
     {
         get => _textColor;
         set => SetProperty(ref _textColor, value);
+    }
+
+    public static ObservableCollection<Brush> TextColorCollection()
+    {
+        var boolCollection = new ObservableCollection<Brush>();
+        for (int i = 0; i < 19; i++)
+            boolCollection.Add(Brushes.White);
+        return boolCollection;
     }
 
     private List<string> _cameraSettings = GetAllConnectedCameras();

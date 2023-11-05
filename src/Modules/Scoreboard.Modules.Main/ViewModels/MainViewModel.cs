@@ -28,6 +28,7 @@ class MainViewModel : ReactiveObject
     public ICommand ChangeModeCommand { get; }
     public ICommand ChooseFileCommand { get; }
     public ICommand CameraCommand { get; }
+    public ICommand CameraSettingsCommand { get; }
     public ICommand DetectionCommand { get; }
     public ICommand FpsIncreaseCommand { get; }
     public ICommand FpsDecreaseCommand { get; }
@@ -41,6 +42,7 @@ class MainViewModel : ReactiveObject
     public ICommand SaveLogCommand { get; }
     public ICommand SaveSettingsCommand { get; }
     public ICommand LoadSettingsCommand { get; }
+    public ICommand ResetSettingsCommand { get; }
     [Reactive] public CancellationTokenSource LastTokenSource { get; set; }
     [Reactive] public bool IsLeftMenuOpen { get; set; }
     [Reactive] public bool IsRightMenuOpen { get; set; }
@@ -205,7 +207,7 @@ class MainViewModel : ReactiveObject
                         Model.Points[choosingID].Y = tmp;
                     }
 
-                    if (Model.Points[choosingID + 1].X - Model.Points[choosingID].X < 10 || Model.Points[choosingID + 1].Y - Model.Points[choosingID].Y < 10)
+                    if (Model.Points[choosingID + 1].X - Model.Points[choosingID].X < 5 || Model.Points[choosingID + 1].Y - Model.Points[choosingID].Y < 5)
                     {
                         Model.Points[choosingID] = default;
                         Model.Exists[choosingID / 2] = false;
@@ -237,7 +239,7 @@ class MainViewModel : ReactiveObject
                         Model.Points[choosingID].Y = tmp;
                     }
 
-                    if (Model.Points[choosingID + 1].X - Model.Points[choosingID].X < 10 || Model.Points[choosingID + 1].Y - Model.Points[choosingID].Y < 10)
+                    if (Model.Points[choosingID + 1].X - Model.Points[choosingID].X < 5 || Model.Points[choosingID + 1].Y - Model.Points[choosingID].Y < 5)
                     {
                         Model.Points[choosingID] = default;
                         Model.Exists[choosingID / 2] = false;
@@ -317,6 +319,14 @@ class MainViewModel : ReactiveObject
             }
         );
 
+        CameraSettingsCommand = ReactiveCommand.Create
+        (
+            () =>
+            {
+                Model.CameraSettings = MainModel.GetAllConnectedCameras();
+            }
+        );
+
         DetectionCommand = ReactiveCommand.Create
         (
             () =>
@@ -372,12 +382,12 @@ class MainViewModel : ReactiveObject
                     return;
                 }
                 StreamWriter writer = new StreamWriter(saveFileDialog.FileName);
-                for (int i = 0; i < 28; i++)
+                for (int i = 0; i < Model.Points.Length; i++)
                 {
                     writer.WriteLine(Model.Points[i].X);
                     writer.WriteLine(Model.Points[i].Y);
                 }
-                for (int i = 0; i < 14; i++)
+                for (int i = 0; i < Model.IsChecked.Count; i++)
                 {
                     writer.WriteLine(Model.IsChecked[i]);
                 }
@@ -396,7 +406,7 @@ class MainViewModel : ReactiveObject
                     return;
                 }
                 StreamReader reader = new StreamReader(openFileDialog.FileName);
-                for (int i = 0; i < 28; i++)
+                for (int i = 0; i < Model.Points.Length; i++)
                 {
                     Model.Points[i].X = Convert.ToDouble(reader.ReadLine());
                     Model.Points[i].Y = Convert.ToDouble(reader.ReadLine());
@@ -406,7 +416,7 @@ class MainViewModel : ReactiveObject
                         Model.ButtonAction[i / 2] = "Редактировать";
                     }
                 }
-                for (int i = 0; i < 14; i++)
+                for (int i = 0; i < Model.IsChecked.Count; i++)
                 {
                     if (reader.ReadLine() == "True")
                         Model.IsChecked[i] = true;
@@ -414,6 +424,23 @@ class MainViewModel : ReactiveObject
                         Model.IsChecked[i] = false;
                 }
                 reader.Close();
+            }
+        );
+
+        ResetSettingsCommand = ReactiveCommand.Create
+        (
+            () =>
+            {
+                for (int i = 0; i < Model.Points.Length; i++)
+                {
+                    Model.Points[i] = default;
+                }
+                for (int i = 0; i < Model.IsChecked.Count; i++)
+                {
+                    Model.Exists[i] = false;
+                    Model.ButtonAction[i] = "Создать";
+                    Model.IsChecked[i] = false;
+                }
             }
         );
 

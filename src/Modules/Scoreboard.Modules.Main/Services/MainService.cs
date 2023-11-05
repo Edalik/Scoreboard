@@ -66,7 +66,7 @@ internal class MainService : IMainService
                                 }
                                 else
                                 {
-                                    TesseractEngine tesseractEngineDigits = new TesseractEngine(@"./tessdata", "digits", EngineMode.Default, "digits");
+                                    TesseractEngine tesseractEngineDigits = new TesseractEngine(@"./tessdata", "ssd", EngineMode.Default, "digits");
                                     tesseractEngineDigits.DefaultPageSegMode = PageSegMode.RawLine;
                                     text = tesseractEngineDigits.Process(Pix.LoadFromMemory(tmp.Clone().ToBytes())).GetText().Trim('\n');
                                     text = Regex.Replace(text, "[^0-9]", "");
@@ -97,69 +97,99 @@ internal class MainService : IMainService
                                     logWriter.Close();
                                     break;
                                 case 6:
-                                    logWriter = new StreamWriter($"Logs\\TIME.txt");
-                                    log += $"TIME={text}\n";
-                                    logWriter.Write($"TIME={text}\n");
+                                    logWriter = new StreamWriter($"Logs\\TIME_MINUTES.txt");
+                                    log += $"TIME_MINUTES={text}\n";
+                                    logWriter.Write($"TIME_MINUTES={text}\n");
                                     logWriter.Close();
                                     break;
                                 case 8:
+                                    logWriter = new StreamWriter($"Logs\\TIME_SECONDS.txt");
+                                    log += $"TIME_SECONDS={text}\n";
+                                    logWriter.Write($"TIME_SECONDS={text}\n");
+                                    logWriter.Close();
+                                    break;
+                                case 10:
                                     logWriter = new StreamWriter($"Logs\\HOME_SCORE.txt");
                                     log += $"HOME_SCORE={text}\n";
                                     logWriter.Write($"HOME_SCORE={text}\n");
                                     logWriter.Close();
                                     break;
-                                case 10:
+                                case 12:
                                     logWriter = new StreamWriter($"Logs\\GUEST_SCORE.txt");
                                     log += $"GUEST_SCORE={text}\n";
                                     logWriter.Write($"GUEST_SCORE={text}\n");
                                     logWriter.Close();
                                     break;
-                                case 12:
+                                case 14:
                                     logWriter = new StreamWriter($"Logs\\HOME_PENALTY1_NUM.txt");
                                     log += $"HOME_PENALTY1_NUM={text}\n";
                                     logWriter.Write($"HOME_PENALTY1_NUM={text}\n");
                                     logWriter.Close();
                                     break;
-                                case 14:
-                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY1_TIME.txt");
-                                    log += $"HOME_PENALTY1_TIME={text}\n";
-                                    logWriter.Write($"HOME_PENALTY1_TIME={text}\n");
+                                case 16:
+                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY1_TIME_MINUTES.txt");
+                                    log += $"HOME_PENALTY1_TIME_MINUTES={text}\n";
+                                    logWriter.Write($"HOME_PENALTY1_TIME_MINUTES={text}\n");
                                     logWriter.Close();
                                     break;
-                                case 16:
+                                case 18:
+                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY1_TIME_SECONDS.txt");
+                                    log += $"HOME_PENALTY1_TIME_SECONDS={text}\n";
+                                    logWriter.Write($"HOME_PENALTY1_TIME_SECONDS={text}\n");
+                                    logWriter.Close();
+                                    break;
+                                case 20:
                                     logWriter = new StreamWriter($"Logs\\HOME_PENALTY2_NUM.txt");
                                     log += $"HOME_PENALTY2_NUM={text}\n";
                                     logWriter.Write($"HOME_PENALTY2_NUM={text}\n");
                                     logWriter.Close();
                                     break;
-                                case 18:
-                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY2_TIME.txt");
-                                    log += $"HOME_PENALTY2_TIME={text}\n";
-                                    logWriter.Write($"HOME_PENALTY2_TIME={text}\n");
+                                case 22:
+                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY2_TIME_MINUTES.txt");
+                                    log += $"HOME_PENALTY2_TIME_MINUTES={text}\n";
+                                    logWriter.Write($"HOME_PENALTY2_TIME_MINUTES={text}\n");
                                     logWriter.Close();
                                     break;
-                                case 20:
+                                case 24:
+                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY2_TIME_SECONDS.txt");
+                                    log += $"HOME_PENALTY2_TIME_SECONDS={text}\n";
+                                    logWriter.Write($"HOME_PENALTY2_TIME_SECONDS={text}\n");
+                                    logWriter.Close();
+                                    break;
+                                case 26:
                                     logWriter = new StreamWriter($"Logs\\GUEST_PENALTY1_NUM.txt");
                                     log += $"GUEST_PENALTY1_NUM={text}\n";
                                     logWriter.Write($"GUEST_PENALTY1_NUM={text}\n");
                                     logWriter.Close();
                                     break;
-                                case 22:
-                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY1_TIME.txt");
-                                    log += $"GUEST_PENALTY1_TIME={text}\n";
-                                    logWriter.Write($"GUEST_PENALTY1_TIME={text}\n");
+                                case 28:
+                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY1_TIME_MINUTES.txt");
+                                    log += $"GUEST_PENALTY1_TIME_MINUTES={text}\n";
+                                    logWriter.Write($"GUEST_PENALTY1_TIME_MINUTES={text}\n");
                                     logWriter.Close();
                                     break;
-                                case 24:
+                                case 30:
+                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY1_TIME_SECONDS.txt");
+                                    log += $"GUEST_PENALTY1_TIME_SECONDS={text}\n";
+                                    logWriter.Write($"GUEST_PENALTY1_TIME_SECONDS={text}\n");
+                                    logWriter.Close();
+                                    break;
+                                case 32:
                                     logWriter = new StreamWriter($"Logs\\GUEST_PENALTY2_NUM.txt");
                                     log += $"GUEST_PENALTY2_NUM={text}\n";
                                     logWriter.Write($"GUEST_PENALTY2_NUM={text}\n");
                                     logWriter.Close();
                                     break;
-                                case 26:
-                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY2_TIME.txt");
-                                    log += $"GUEST_PENALTY2_TIME={text}\n";
-                                    logWriter.Write($"GUEST_PENALTY2_TIME={text}\n");
+                                case 34:
+                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY2_TIME_MINUTES.txt");
+                                    log += $"GUEST_PENALTY2_TIME_MINUTES={text}\n";
+                                    logWriter.Write($"GUEST_PENALTY2_TIME_MINUTES={text}\n");
+                                    logWriter.Close();
+                                    break;
+                                case 36:
+                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY2_TIME_SECONDS.txt");
+                                    log += $"GUEST_PENALTY2_TIME_SECONDS={text}\n";
+                                    logWriter.Write($"GUEST_PENALTY2_TIME_SECONDS={text}\n");
                                     logWriter.Close();
                                     break;
                             }
