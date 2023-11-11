@@ -37,7 +37,6 @@ internal class MainService : IMainService
                     Cv2.AdaptiveThreshold(matg, matg, 255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.BinaryInv, 21, -21);
                     string log = "";
                     string[] texts = new string[19];
-                    Stopwatch time = Stopwatch.StartNew();
                     Parallel.For(0, model.Points.Length / 2, index =>
                     {
                         int i = index * 2;
@@ -208,7 +207,6 @@ internal class MainService : IMainService
                         }
                         i++;
                     }
-                    time.Stop();
                     if (log != "")
                     {
                         log = $"Timestamp: {DateTime.Now}\n{log}";
@@ -221,7 +219,6 @@ internal class MainService : IMainService
                             writer.WriteLine(log);
                         }
                     }
-                    model.Log = time.ElapsedMilliseconds + "\n" + model.Log;
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
