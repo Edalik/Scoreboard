@@ -29,4 +29,5 @@ internal interface IMainModel
     bool FpsDecreaseEnabled { get; set; }
     bool IsDetectionEnabled { get; set; }
     bool IsAdvancedMode { get; set; }
+    bool IsSavingDataSet { get; set; }
 }

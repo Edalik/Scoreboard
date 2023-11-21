@@ -23,13 +23,24 @@ internal class MainService : IMainService
             {
                 Mat frame = new Mat();
                 //var periodicTimer = new PeriodicTimer(TimeSpan.FromSeconds(1 / model.Fps));
-                videoCapture.Read(frame);
+                if (!videoCapture.Read(frame))
+                {
+                    return;
+                }
+                int count = 0;
                 int fps = (int)videoCapture.Fps;
+                string date = DateTime.Now.ToString("d.M.yyyy_H.mm.ss");
                 Directory.CreateDirectory("Logs");
-                File.Create("Logs\\Log.txt");
+                File.Create($"Logs\\Log_{date}.txt");
+                Directory.CreateDirectory($"DataSet\\{date}");
                 while (!cancellationToken.IsCancellationRequested)
                 //while (await periodicTimer.WaitForNextTickAsync() && !cancellationToken.IsCancellationRequested)
                 {
+                    if (model.IsSavingDataSet)
+                    {
+                        frame.SaveImage($"DataSet\\{date}\\{count}.png");
+                        count++;
+                    }
                     Stopwatch stopwatch = Stopwatch.StartNew();
                     Mat mat = frame.Clone();
                     Mat matg = frame.Clone();

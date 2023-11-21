@@ -15,6 +15,13 @@
              d:DesignHeight="1080"
              d:DataContext="{d:DesignInstance vm:MainViewModel}"
              Style="{StaticResource MaterialDesignUserControl}">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding CameraCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -24,7 +31,6 @@
             <ToolBar ClipToBounds="False" Style="{StaticResource MaterialDesignToolBar}">
                 <Menu>
                     <MenuItem Command="{Binding ChooseFileCommand}" Header="Файл"/>
-                    <MenuItem Command="{Binding CameraCommand}" Header="Камера"/>
                     <MenuItem Header="Режим приложения">
                         <MenuItem Command="{Binding ChangeModeCommand}" CommandParameter="0" Header="Режим: основной"/>
                         <MenuItem Command="{Binding ChangeModeCommand}" CommandParameter="1" Header="Режим: настройка"/>
@@ -44,6 +50,7 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition/>
+                                <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
@@ -99,6 +106,16 @@
                                             Cursor="Hand"/>
                                 </Grid>
                             </Border>
+                            
+                            <Grid Grid.Row="6" Cursor="">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Content="Сохранять выборку" VerticalAlignment="Center"/>
+                                <ToggleButton IsChecked="{Binding Model.IsSavingDataSet}" Margin="10, 10, 10, 10" Grid.Column="1" Cursor="Hand"/>
+                            </Grid>
                         </Grid>
                     </GroupBox>
                 </md:DrawerHost.LeftDrawerContent>
@@ -158,6 +175,9 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DropDownOpened">
                                         <i:InvokeCommandAction Command="{Binding CameraSettingsCommand}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="DropDownClosed">
+                                        <i:InvokeCommandAction Command="{Binding CameraCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </ComboBox>

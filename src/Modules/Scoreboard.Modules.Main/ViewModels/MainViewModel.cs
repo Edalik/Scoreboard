@@ -309,12 +309,13 @@ class MainViewModel : ReactiveObject
 
                 if (!Model.CameraSettings.Any())
                 {
-                    MessageBox.Show("Устройства не обнаружены, проверьте подключение устройства и перезапустите приложение");
+                    MessageBox.Show("Устройства не обнаружены, проверьте подключение устройства", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
                 lastReadingTask = ReadFile(LastTokenSource.Token, new VideoCapture(Model.CameraSetting));
                 await lastReadingTask;
+                lastReadingTask = null;
             }
         );
 

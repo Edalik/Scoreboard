@@ -202,4 +202,11 @@ internal class MainModel : BindableBase, IMainModel
         get => _isAdvancedMode;
         set => SetProperty(ref _isAdvancedMode, value);
     }
+
+    private bool _isSavingDataSet = true;
+    public bool IsSavingDataSet
+    {
+        get => _isSavingDataSet;
+        set => SetProperty(ref _isSavingDataSet, value);
+    }
 }
