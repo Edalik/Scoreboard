@@ -131,6 +131,13 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _fps, value);
     }
 
+    private int _id = 0;
+    public int Id
+    {
+        get => _id;
+        set => SetProperty(ref _id, value);
+    }
+
     private string _log = "";
     public string Log
     {
@@ -203,7 +210,7 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _isAdvancedMode, value);
     }
 
-    private bool _isSavingDataSet = true;
+    private bool _isSavingDataSet;
     public bool IsSavingDataSet
     {
         get => _isSavingDataSet;
