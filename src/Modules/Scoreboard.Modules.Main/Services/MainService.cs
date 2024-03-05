@@ -15,7 +15,7 @@ namespace Scoreboard.Modules.Main.Services;
 internal class MainService : IMainService
 {
 
-    public Task ReadFile(IMainModel model, CancellationToken cancellationToken, VideoCapture videoCapture)
+    public Task CaptureVideo(IMainModel model, CancellationToken cancellationToken, VideoCapture videoCapture)
     {
         return Task.Run
         (
@@ -28,16 +28,16 @@ internal class MainService : IMainService
                     return;
                 }
                 int count = 0;
+                int saveDataSetTime = 0;
                 int fps = (int)videoCapture.Fps;
                 string date = DateTime.Now.ToString("d.M.yyyy_H.mm.ss");
-                Directory.CreateDirectory("Logs");
-                File.Create($"Logs\\Log_{date}.txt");
-                Directory.CreateDirectory($"DataSet\\{date}");
                 while (!cancellationToken.IsCancellationRequested)
                 //while (await periodicTimer.WaitForNextTickAsync() && !cancellationToken.IsCancellationRequested)
                 {
-                    if (model.IsSavingDataSet)
+                    if (model.IsSavingDataSet && saveDataSetTime > 1000)
                     {
+                        if (!Directory.Exists($"DataSet\\{date}"))
+                            Directory.CreateDirectory($"DataSet\\{date}");
                         frame.SaveImage($"DataSet\\{date}\\{count}.png");
                         count++;
                     }
@@ -47,7 +47,6 @@ internal class MainService : IMainService
                     Cv2.CvtColor(matg, matg, ColorConversionCodes.BGR2GRAY);
                     Cv2.AdaptiveThreshold(matg, matg, 255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.BinaryInv, 21, -21);
                     string log = "";
-                    string[] texts = new string[19];
                     Parallel.For(0, model.Points.Length / 2, index =>
                     {
                         int i = index * 2;
@@ -63,7 +62,7 @@ internal class MainService : IMainService
                                     tesseractEngine.DefaultPageSegMode = PageSegMode.SingleWord;
                                     text = tesseractEngine.Process(Pix.LoadFromMemory(tmp.Clone().ToBytes())).GetText().Trim('\n');
                                     text = Regex.Replace(text, "[^А-Яа-я]", "");
-                                    texts[index] = text;
+                                    model.ScoreboardData.SetStatValue(index, text);
                                 }
                                 else
                                 {
@@ -71,7 +70,7 @@ internal class MainService : IMainService
                                     tesseractEngineDigits.DefaultPageSegMode = PageSegMode.RawLine;
                                     text = tesseractEngineDigits.Process(Pix.LoadFromMemory(tmp.Clone().ToBytes())).GetText().Trim('\n');
                                     text = Regex.Replace(text, "[^0-9]", "");
-                                    texts[index] = text;
+                                    model.ScoreboardData.SetStatValue(index, text);
                                 }
                             }
                             catch
@@ -80,7 +79,7 @@ internal class MainService : IMainService
                             }
                         }
                     });
-                    for (int i = 0; i < model.Points.Length; i++)
+                    for (int i = 0; i < model.Points.Length; i += 2)
                     {
                         Mat tmp = new Mat();
                         if (model.Points[i] != default)
@@ -96,127 +95,16 @@ internal class MainService : IMainService
                         }
                         if (model.IsDetectionEnabled && model.IsChecked[i / 2] && model.Points[i] != default)
                         {
-                            string text = texts[i / 2];
-                            StreamWriter logWriter;
-                            switch (i)
-                            {
-                                case 0:
-                                    logWriter = new StreamWriter($"Logs\\HOME.txt");
-                                    log += $"HOME={text}\n";
-                                    logWriter.Write($"HOME={text}\n");
+                            string text = model.ScoreboardData.GetStatValue(i / 2);
+                            string statName = model.ScoreboardData.GetStatName(i / 2);
+                            if (text != null)
+                                using (StreamWriter logWriter = new StreamWriter($"{model.LogPath}\\{statName}.txt"))
+                                {
+                                    log += $"{statName}={text}\n";
+                                    logWriter.Write(text);
                                     logWriter.Close();
-                                    break;
-                                case 2:
-                                    logWriter = new StreamWriter($"Logs\\GUEST.txt");
-                                    log += $"GUEST={text}\n";
-                                    logWriter.Write($"GUEST={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 4:
-                                    logWriter = new StreamWriter($"Logs\\PERIOD.txt");
-                                    log += $"PERIOD={text}\n";
-                                    logWriter.Write($"PERIOD={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 6:
-                                    logWriter = new StreamWriter($"Logs\\TIME_MINUTES.txt");
-                                    log += $"TIME_MINUTES={text}\n";
-                                    logWriter.Write($"TIME_MINUTES={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 8:
-                                    logWriter = new StreamWriter($"Logs\\TIME_SECONDS.txt");
-                                    log += $"TIME_SECONDS={text}\n";
-                                    logWriter.Write($"TIME_SECONDS={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 10:
-                                    logWriter = new StreamWriter($"Logs\\HOME_SCORE.txt");
-                                    log += $"HOME_SCORE={text}\n";
-                                    logWriter.Write($"HOME_SCORE={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 12:
-                                    logWriter = new StreamWriter($"Logs\\GUEST_SCORE.txt");
-                                    log += $"GUEST_SCORE={text}\n";
-                                    logWriter.Write($"GUEST_SCORE={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 14:
-                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY1_NUM.txt");
-                                    log += $"HOME_PENALTY1_NUM={text}\n";
-                                    logWriter.Write($"HOME_PENALTY1_NUM={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 16:
-                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY1_TIME_MINUTES.txt");
-                                    log += $"HOME_PENALTY1_TIME_MINUTES={text}\n";
-                                    logWriter.Write($"HOME_PENALTY1_TIME_MINUTES={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 18:
-                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY1_TIME_SECONDS.txt");
-                                    log += $"HOME_PENALTY1_TIME_SECONDS={text}\n";
-                                    logWriter.Write($"HOME_PENALTY1_TIME_SECONDS={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 20:
-                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY2_NUM.txt");
-                                    log += $"HOME_PENALTY2_NUM={text}\n";
-                                    logWriter.Write($"HOME_PENALTY2_NUM={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 22:
-                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY2_TIME_MINUTES.txt");
-                                    log += $"HOME_PENALTY2_TIME_MINUTES={text}\n";
-                                    logWriter.Write($"HOME_PENALTY2_TIME_MINUTES={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 24:
-                                    logWriter = new StreamWriter($"Logs\\HOME_PENALTY2_TIME_SECONDS.txt");
-                                    log += $"HOME_PENALTY2_TIME_SECONDS={text}\n";
-                                    logWriter.Write($"HOME_PENALTY2_TIME_SECONDS={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 26:
-                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY1_NUM.txt");
-                                    log += $"GUEST_PENALTY1_NUM={text}\n";
-                                    logWriter.Write($"GUEST_PENALTY1_NUM={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 28:
-                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY1_TIME_MINUTES.txt");
-                                    log += $"GUEST_PENALTY1_TIME_MINUTES={text}\n";
-                                    logWriter.Write($"GUEST_PENALTY1_TIME_MINUTES={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 30:
-                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY1_TIME_SECONDS.txt");
-                                    log += $"GUEST_PENALTY1_TIME_SECONDS={text}\n";
-                                    logWriter.Write($"GUEST_PENALTY1_TIME_SECONDS={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 32:
-                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY2_NUM.txt");
-                                    log += $"GUEST_PENALTY2_NUM={text}\n";
-                                    logWriter.Write($"GUEST_PENALTY2_NUM={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 34:
-                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY2_TIME_MINUTES.txt");
-                                    log += $"GUEST_PENALTY2_TIME_MINUTES={text}\n";
-                                    logWriter.Write($"GUEST_PENALTY2_TIME_MINUTES={text}\n");
-                                    logWriter.Close();
-                                    break;
-                                case 36:
-                                    logWriter = new StreamWriter($"Logs\\GUEST_PENALTY2_TIME_SECONDS.txt");
-                                    log += $"GUEST_PENALTY2_TIME_SECONDS={text}\n";
-                                    logWriter.Write($"GUEST_PENALTY2_TIME_SECONDS={text}\n");
-                                    logWriter.Close();
-                                    break;
-                            }
+                                }
                         }
-                        i++;
                     }
                     if (log != "")
                     {
@@ -225,10 +113,6 @@ internal class MainService : IMainService
                             model.Log = log + "\n" + model.Log;
                         else
                             model.Log = log;
-                        using (StreamWriter writer = new StreamWriter("Logs\\Log.txt", true))
-                        {
-                            writer.WriteLine(log);
-                        }
                     }
 
                     Application.Current.Dispatcher.Invoke(() =>
@@ -244,6 +128,7 @@ internal class MainService : IMainService
                         videoCapture.Read(frame);
 
                     stopwatch.Stop();
+                    saveDataSetTime += (int)stopwatch.ElapsedMilliseconds;
                     if ((int)(1000 / model.Fps) - (int)stopwatch.ElapsedMilliseconds > 0)
                         Thread.Sleep((int)(1000 / model.Fps) - (int)stopwatch.ElapsedMilliseconds);
                 }

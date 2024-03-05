@@ -160,6 +160,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
@@ -206,6 +207,8 @@
                         <Button Grid.Column="2" Margin="10" Content="{Binding Model.DetectionButtonText}" Background="{Binding Model.DetectionButtonColor}" BorderBrush="{Binding Model.DetectionButtonColor}" Command="{Binding DetectionCommand}" Cursor="Hand"/>
 
                         <Button Grid.Column="3" Margin="10" Content="Выбор арены" Command="{Binding LoadSettingsCommand}" Cursor="Hand"/>
+                        
+                        <Button Grid.Column="4" Margin="10" Content="Выбрать путь сохранения лога" Command="{Binding LogPathCommand}" Cursor="Hand"/>
 
                     </Grid>
 

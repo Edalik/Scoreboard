@@ -9,7 +9,6 @@ using Scoreboard.Modules.Main.Models.Abstractions;
 using Scoreboard.Modules.Main.Services;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,6 +35,7 @@ class MainViewModel : ReactiveObject
     public ICommand MouseUpCommand { get; }
     public ICommand MouseMoveCommand { get; }
     public ICommand ResizeCommand { get; }
+    public ICommand LogPathCommand { get; }
     public ICommand ClearLogCommand { get; }
     public ICommand DeleteRegionCommand { get; }
     public ICommand SaveLogCommand { get; }
@@ -280,7 +280,7 @@ class MainViewModel : ReactiveObject
                 }
                 VideoCapture videoCapture = new VideoCapture(openFileDialog.FileName);
 
-                lastReadingTask = ReadFile(LastTokenSource.Token, videoCapture);
+                lastReadingTask = CaptureVideo(LastTokenSource.Token, videoCapture);
                 await lastReadingTask;
             }
         );
@@ -307,13 +307,7 @@ class MainViewModel : ReactiveObject
                     await lastReadingTask;
                 }
 
-                if (!Model.CameraSettings.Any())
-                {
-                    MessageBox.Show("Устройства не обнаружены, проверьте подключение устройства", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                lastReadingTask = ReadFile(LastTokenSource.Token, new VideoCapture(Model.CameraSetting));
+                lastReadingTask = CaptureVideo(LastTokenSource.Token, new VideoCapture(Model.CameraSetting));
                 await lastReadingTask;
                 lastReadingTask = null;
             }
@@ -327,10 +321,54 @@ class MainViewModel : ReactiveObject
             }
         );
 
+        LogPathCommand = ReactiveCommand.Create
+        (
+            () =>
+            {
+                System.Windows.Forms.FolderBrowserDialog folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog()
+                {
+                    ShowNewFolderButton = true,
+                    Description = "Выберите путь сохранения лога",
+                    UseDescriptionForTitle = true
+                };
+                folderBrowserDialog.ShowDialog();
+                if (folderBrowserDialog.SelectedPath == "")
+                {
+                    return;
+                }
+                using (StreamWriter writer = new StreamWriter("zxc.zxc"))
+                {
+                    writer.WriteLine(folderBrowserDialog.SelectedPath);
+                }
+                Model.LogPath = folderBrowserDialog.SelectedPath;
+            }
+        );
+
         DetectionCommand = ReactiveCommand.Create
         (
             () =>
             {
+                if (Model.LogPath == "" || !Directory.Exists(Model.LogPath))
+                {
+                    System.Windows.Forms.FolderBrowserDialog folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog()
+                    {
+                        ShowNewFolderButton = true,
+                        Description = "Выберите путь сохранения лога",
+                        UseDescriptionForTitle = true
+                    };
+                    folderBrowserDialog.ShowDialog();
+                    if (folderBrowserDialog.SelectedPath == "")
+                    {
+                        MessageBox.Show("Невозможно начать распознавание не выбрав путь сохранения лога");
+                        return;
+                    }
+                    using (StreamWriter writer = new StreamWriter("zxc.zxc"))
+                    {
+                        writer.WriteLine(folderBrowserDialog.SelectedPath);
+                    }
+                    Model.LogPath = folderBrowserDialog.SelectedPath;
+                };
+
                 if (Model.IsDetectionEnabled)
                 {
                     Model.IsDetectionEnabled = false;
@@ -377,7 +415,7 @@ class MainViewModel : ReactiveObject
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Файл настроек (*.settings)|*.settings";
-                if (saveFileDialog.ShowDialog() == false)
+                if (!saveFileDialog.ShowDialog().Value)
                 {
                     return;
                 }
@@ -401,7 +439,7 @@ class MainViewModel : ReactiveObject
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = "Файл настроек (*.settings)|*.settings";
-                if (openFileDialog.ShowDialog() == false)
+                if (!openFileDialog.ShowDialog().Value)
                 {
                     return;
                 }
@@ -530,5 +568,5 @@ class MainViewModel : ReactiveObject
         Model.IsResizing[choosingID / 2] = !Model.IsResizing[choosingID / 2];
     }
 
-    private Task ReadFile(CancellationToken cancellationToken, VideoCapture videoCapture) => _mainService.ReadFile(Model, cancellationToken, videoCapture);
+    private Task CaptureVideo(CancellationToken cancellationToken, VideoCapture videoCapture) => _mainService.CaptureVideo(Model, cancellationToken, videoCapture);
 }

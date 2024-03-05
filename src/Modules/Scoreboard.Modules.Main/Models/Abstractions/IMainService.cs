@@ -10,5 +10,5 @@ internal interface IMainService
     ///     Считать видео
     /// </summary>
     /// <param name="mainModel"></param>
-    Task ReadFile(IMainModel mainModel, CancellationToken cancellationToken, VideoCapture videoCapture);
+    Task CaptureVideo(IMainModel mainModel, CancellationToken cancellationToken, VideoCapture videoCapture);
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Scoreboard.Modules.Main.Models.Data;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
@@ -19,6 +20,7 @@ internal interface IMainModel
     List<string> CameraSettings { get; set; }
     int CameraSetting { get; set; }
     double Fps { get; set; }
+    string LogPath { get; set; }
     string Log { get; set; }
     string DetectionButtonText { get; set; }
     Brush DetectionButtonColor { get; set; }
@@ -30,4 +32,5 @@ internal interface IMainModel
     bool IsDetectionEnabled { get; set; }
     bool IsAdvancedMode { get; set; }
     bool IsSavingDataSet { get; set; }
+    ScoreboardData ScoreboardData { get; set; } 
 }

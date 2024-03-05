@@ -1,8 +1,9 @@
 ﻿using Prism.Mvvm;
 using Scoreboard.Modules.Main.Models.Abstractions;
+using Scoreboard.Modules.Main.Models.Data;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Management;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 
@@ -106,13 +107,8 @@ internal class MainModel : BindableBase, IMainModel
     public static List<string> GetAllConnectedCameras()
     {
         var cameraNames = new List<string>();
-        using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE (PNPClass = 'Image' OR PNPClass = 'Camera')"))
-        {
-            foreach (var device in searcher.Get())
-            {
-                cameraNames.Add(device["Caption"].ToString());
-            }
-        }
+        for (int i = 1; i <= 5; i++)
+            cameraNames.Add($"Камера {i}");
 
         return cameraNames;
     }
@@ -131,11 +127,24 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _fps, value);
     }
 
-    private int _id = 0;
-    public int Id
+    private string _logPath = GetLogPath();
+    public string LogPath
     {
-        get => _id;
-        set => SetProperty(ref _id, value);
+        get => _logPath;
+        set => SetProperty(ref _logPath, value);
+    }
+
+    public static string GetLogPath()
+    {
+        if (File.Exists("zxc.zxc"))
+        {
+            using (StreamReader reader = new StreamReader("zxc.zxc"))
+            {
+                return reader.ReadLine();
+            }
+        }
+        else
+            return "";
     }
 
     private string _log = "";
@@ -152,6 +161,7 @@ internal class MainModel : BindableBase, IMainModel
         get => _detectionButtonText;
         set => SetProperty(ref _detectionButtonText, value);
     }
+
     public static BrushConverter bc = new BrushConverter();
     private Brush _detectionButtonColor = (Brush)bc.ConvertFrom("#03a9f4");
     public Brush DetectionButtonColor
@@ -175,7 +185,7 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _saveSetting, value);
     }
 
-    private bool _isAppend = true;
+    private bool _isAppend;
     public bool IsAppend
     {
         get => _isAppend;
@@ -215,5 +225,12 @@ internal class MainModel : BindableBase, IMainModel
     {
         get => _isSavingDataSet;
         set => SetProperty(ref _isSavingDataSet, value);
+    }
+
+    public ScoreboardData _scoreboardData = new ScoreboardData();
+    public ScoreboardData ScoreboardData
+    {
+        get => _scoreboardData;
+        set => SetProperty(ref _scoreboardData, value);
     }
 }
