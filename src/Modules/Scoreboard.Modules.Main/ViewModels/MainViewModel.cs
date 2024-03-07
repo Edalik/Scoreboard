@@ -350,6 +350,7 @@ class MainViewModel : ReactiveObject
             {
                 if (Model.LogPath == "" || !Directory.Exists(Model.LogPath))
                 {
+                    MessageBox.Show("Перед началом распознавания необходимо выбрать путь сохранения лога");
                     System.Windows.Forms.FolderBrowserDialog folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog()
                     {
                         ShowNewFolderButton = true,
