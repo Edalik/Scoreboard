@@ -227,10 +227,10 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _isSavingDataSet, value);
     }
 
-    public ScoreboardInfo _scoreboardData = new ScoreboardInfo();
+    public ScoreboardInfo _scoreboardInfo = new ScoreboardInfo();
     public ScoreboardInfo ScoreboardInfo
     {
-        get => _scoreboardData;
-        set => SetProperty(ref _scoreboardData, value);
+        get => _scoreboardInfo;
+        set => SetProperty(ref _scoreboardInfo, value);
     }
 }

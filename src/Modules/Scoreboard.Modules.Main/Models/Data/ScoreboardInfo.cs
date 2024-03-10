@@ -1,4 +1,6 @@
-﻿namespace Scoreboard.Modules.Main.Models.Data
+﻿using System.IO;
+
+namespace Scoreboard.Modules.Main.Models.Data
 {
     public class ScoreboardInfo
     {
@@ -34,9 +36,22 @@
         {
             return Value[id];
         }
+
         public void SetValue(int id, string value)
         {
             Value[id] = value;
+        }
+
+        public void SaveValue(int id, string path)
+        {
+            if (Value[id] == null)
+                return;
+
+            using (StreamWriter logWriter = new StreamWriter($"{path}\\{Name[id]}.txt"))
+            {
+                logWriter.Write(Value[id]);
+                logWriter.Close();
+            }
         }
     }
 }

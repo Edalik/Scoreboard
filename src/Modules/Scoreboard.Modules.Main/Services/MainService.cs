@@ -97,13 +97,9 @@ internal class MainService : IMainService
                         {
                             string text = model.ScoreboardInfo.GetValue(i / 2);
                             string statName = model.ScoreboardInfo.GetName(i / 2);
-                            if (text != null)
-                                using (StreamWriter logWriter = new StreamWriter($"{model.LogPath}\\{statName}.txt"))
-                                {
-                                    log += $"{statName}={text}\n";
-                                    logWriter.Write(text);
-                                    logWriter.Close();
-                                }
+
+                            model.ScoreboardInfo.SaveValue(i / 2, model.LogPath);
+                            log += $"{statName}={text}\n";
                         }
                     }
                     if (log != "")
