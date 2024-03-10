@@ -32,5 +32,5 @@ internal interface IMainModel
     bool IsDetectionEnabled { get; set; }
     bool IsAdvancedMode { get; set; }
     bool IsSavingDataSet { get; set; }
-    ScoreboardData ScoreboardData { get; set; } 
+    ScoreboardInfo ScoreboardInfo { get; set; }
 }

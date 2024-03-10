@@ -62,7 +62,7 @@ internal class MainService : IMainService
                                     tesseractEngine.DefaultPageSegMode = PageSegMode.SingleWord;
                                     text = tesseractEngine.Process(Pix.LoadFromMemory(tmp.Clone().ToBytes())).GetText().Trim('\n');
                                     text = Regex.Replace(text, "[^А-Яа-я]", "");
-                                    model.ScoreboardData.SetStatValue(index, text);
+                                    model.ScoreboardInfo.SetValue(index, text);
                                 }
                                 else
                                 {
@@ -70,7 +70,7 @@ internal class MainService : IMainService
                                     tesseractEngineDigits.DefaultPageSegMode = PageSegMode.RawLine;
                                     text = tesseractEngineDigits.Process(Pix.LoadFromMemory(tmp.Clone().ToBytes())).GetText().Trim('\n');
                                     text = Regex.Replace(text, "[^0-9]", "");
-                                    model.ScoreboardData.SetStatValue(index, text);
+                                    model.ScoreboardInfo.SetValue(index, text);
                                 }
                             }
                             catch
@@ -95,8 +95,8 @@ internal class MainService : IMainService
                         }
                         if (model.IsDetectionEnabled && model.IsChecked[i / 2] && model.Points[i] != default)
                         {
-                            string text = model.ScoreboardData.GetStatValue(i / 2);
-                            string statName = model.ScoreboardData.GetStatName(i / 2);
+                            string text = model.ScoreboardInfo.GetValue(i / 2);
+                            string statName = model.ScoreboardInfo.GetName(i / 2);
                             if (text != null)
                                 using (StreamWriter logWriter = new StreamWriter($"{model.LogPath}\\{statName}.txt"))
                                 {

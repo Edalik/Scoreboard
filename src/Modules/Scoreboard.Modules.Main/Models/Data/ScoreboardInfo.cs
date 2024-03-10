@@ -1,8 +1,8 @@
 ﻿namespace Scoreboard.Modules.Main.Models.Data
 {
-    public class ScoreboardData
+    public class ScoreboardInfo
     {
-        string[] StatName =
+        string[] Name =
             {"HOME_TEAM",
             "GUEST_TEAM",
             "PERIOD",
@@ -23,20 +23,20 @@
             "GUEST_PENALTY2_TIME_MINUTES",
             "GUEST_PENALTY2_TIME_SECONDS",};
 
-        string[] StatValue = new string[19];
+        string[] Value = new string[19];
 
-        public string GetStatName(int id)
+        public string GetName(int id)
         {
-            return StatName[id];
+            return Name[id];
         }
 
-        public string GetStatValue(int id)
+        public string GetValue(int id)
         {
-            return StatValue[id];
+            return Value[id];
         }
-        public void SetStatValue(int id, string value)
+        public void SetValue(int id, string value)
         {
-            StatValue[id] = value;
+            Value[id] = value;
         }
     }
 }
