@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Sparks.Modules.Main;
+namespace Scoreboard.Modules.Main;
 
 public class BindableBase : INotifyPropertyChanged
 {
