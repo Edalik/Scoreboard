@@ -30,14 +30,14 @@ class MainViewModel : ReactiveObject
     public ICommand DetectionCommand { get; }
     public ICommand FpsIncreaseCommand { get; }
     public ICommand FpsDecreaseCommand { get; }
-    public ICommand ChooseRegionCommand { get; set; }
+    public ICommand CreateZoneCommand { get; set; }
     public ICommand MouseDownCommand { get; }
     public ICommand MouseUpCommand { get; }
     public ICommand MouseMoveCommand { get; }
-    public ICommand ResizeCommand { get; }
+    public ICommand ResizeZoneCommand { get; }
     public ICommand LogPathCommand { get; }
     public ICommand ClearLogCommand { get; }
-    public ICommand DeleteRegionCommand { get; }
+    public ICommand DeleteZoneCommand { get; }
     public ICommand SaveLogCommand { get; }
     public ICommand SaveSettingsCommand { get; }
     public ICommand LoadSettingsCommand { get; }
@@ -64,9 +64,9 @@ class MainViewModel : ReactiveObject
         Model = new MainModel();
 
         ChangeModeCommand = new DelegateCommand<string?>(ChangeMode);
-        ChooseRegionCommand = new DelegateCommand<string?>(ChooseRegion);
-        ResizeCommand = new DelegateCommand<string?>(Resize);
-        DeleteRegionCommand = new DelegateCommand<string?>(DeleteRegion);
+        CreateZoneCommand = new DelegateCommand<string?>(ChooseZone);
+        ResizeZoneCommand = new DelegateCommand<string?>(ResizeZone);
+        DeleteZoneCommand = new DelegateCommand<string?>(DeleteZone);
 
         MouseDownCommand = ReactiveCommand.Create
         (
@@ -518,7 +518,7 @@ class MainViewModel : ReactiveObject
         }
     }
 
-    private void DeleteRegion(string? parameter)
+    private void DeleteZone(string? parameter)
     {
         Mouse.OverrideCursor = null;
         Model.TextColor[choosingID / 2] = Brushes.White;
@@ -533,7 +533,7 @@ class MainViewModel : ReactiveObject
         Model.ButtonAction[choosingID / 2] = "Создать";
     }
 
-    private void ChooseRegion(string? parameter)
+    private void ChooseZone(string? parameter)
     {
         if (Model.ButtonAction[Convert.ToInt32(parameter) / 2] == "Создать")
         {
@@ -544,10 +544,10 @@ class MainViewModel : ReactiveObject
             Mouse.OverrideCursor = Cursors.Cross;
         }
         else
-            Resize(parameter);
+            ResizeZone(parameter);
     }
 
-    private void Resize(string? parameter)
+    private void ResizeZone(string? parameter)
     {
         if (Model.IsResizing[choosingID / 2])
         {
