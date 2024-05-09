@@ -136,9 +136,9 @@ internal class MainModel : BindableBase, IMainModel
 
     public static string GetLogPath()
     {
-        if (File.Exists("zxc.zxc"))
+        if (File.Exists("settings.ini"))
         {
-            using (StreamReader reader = new StreamReader("zxc.zxc"))
+            using (StreamReader reader = new StreamReader("settings.ini"))
             {
                 return reader.ReadLine();
             }

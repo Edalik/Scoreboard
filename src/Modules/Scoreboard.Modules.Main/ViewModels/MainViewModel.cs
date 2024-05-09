@@ -336,7 +336,7 @@ class MainViewModel : ReactiveObject
                 {
                     return;
                 }
-                using (StreamWriter writer = new StreamWriter("zxc.zxc"))
+                using (StreamWriter writer = new StreamWriter("settings.ini"))
                 {
                     writer.WriteLine(folderBrowserDialog.SelectedPath);
                 }
@@ -363,7 +363,7 @@ class MainViewModel : ReactiveObject
                         MessageBox.Show("Невозможно начать распознавание не выбрав путь сохранения лога");
                         return;
                     }
-                    using (StreamWriter writer = new StreamWriter("zxc.zxc"))
+                    using (StreamWriter writer = new StreamWriter("settings.ini"))
                     {
                         writer.WriteLine(folderBrowserDialog.SelectedPath);
                     }
@@ -415,7 +415,7 @@ class MainViewModel : ReactiveObject
             () =>
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "Файл настроек (*.settings)|*.settings";
+                saveFileDialog.Filter = "Файл настроек (*.stadium)|*.stadium";
                 if (!saveFileDialog.ShowDialog().Value)
                 {
                     return;
@@ -439,7 +439,7 @@ class MainViewModel : ReactiveObject
             () =>
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Файл настроек (*.settings)|*.settings";
+                openFileDialog.Filter = "Файл настроек (*.stadium)|*.stadium";
                 if (!openFileDialog.ShowDialog().Value)
                 {
                     return;
