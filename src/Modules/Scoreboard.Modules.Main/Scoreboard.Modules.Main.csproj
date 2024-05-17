@@ -27,15 +27,12 @@
 	<ItemGroup>
 		<None Update="tessdata\configs\digits">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-
 		</None>
 		<None Update="tessdata\rus.traineddata">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-
 		</None>
 		<None Update="tessdata\ssd.traineddata">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-
 		</None>
 	</ItemGroup>
 

@@ -280,7 +280,7 @@ class MainViewModel : ReactiveObject
                 }
                 VideoCapture videoCapture = new VideoCapture(openFileDialog.FileName);
 
-                lastReadingTask = CaptureVideo(LastTokenSource.Token, videoCapture);
+                lastReadingTask = CaptureVideo(LastTokenSource.Token);
                 await lastReadingTask;
             }
         );
@@ -289,15 +289,20 @@ class MainViewModel : ReactiveObject
         (
             async () =>
             {
-                if (lastReadingTask is not null)
+                if (lastReadingTask is not null && Model.IsDetectionEnabled)
                 {
                     var Result = MessageBox.Show("Остановить текущее распознавание?", "Остановить текущее распознавание?", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (Result == MessageBoxResult.No)
                     {
                         return;
                     }
-                    Model.Frame = null;
                 }
+
+                Model.IsDetectionEnabled = false;
+                Model.DetectionButtonText = "Начать распознавание";
+                BrushConverter bc = new BrushConverter();
+                Model.DetectionButtonColor = (Brush)bc.ConvertFrom("#03a9f4")!;
+                Model.Frame = null;
 
                 LastTokenSource?.Cancel();
                 LastTokenSource = new();
@@ -307,9 +312,8 @@ class MainViewModel : ReactiveObject
                     await lastReadingTask;
                 }
 
-                lastReadingTask = CaptureVideo(LastTokenSource.Token, new VideoCapture(Model.CameraSetting));
+                lastReadingTask = CaptureVideo(LastTokenSource.Token);
                 await lastReadingTask;
-                lastReadingTask = null;
             }
         );
 
@@ -375,7 +379,7 @@ class MainViewModel : ReactiveObject
                     Model.IsDetectionEnabled = false;
                     Model.DetectionButtonText = "Начать распознавание";
                     BrushConverter bc = new BrushConverter();
-                    Model.DetectionButtonColor = (Brush)bc.ConvertFrom("#03a9f4");
+                    Model.DetectionButtonColor = (Brush)bc.ConvertFrom("#03a9f4")!;
                 }
                 else
                 {
@@ -569,5 +573,5 @@ class MainViewModel : ReactiveObject
         Model.IsResizing[choosingID / 2] = !Model.IsResizing[choosingID / 2];
     }
 
-    private Task CaptureVideo(CancellationToken cancellationToken, VideoCapture videoCapture) => _mainService.CaptureVideo(Model, cancellationToken, videoCapture);
+    private Task CaptureVideo(CancellationToken cancellationToken) => _mainService.CaptureVideo(Model, cancellationToken);
 }

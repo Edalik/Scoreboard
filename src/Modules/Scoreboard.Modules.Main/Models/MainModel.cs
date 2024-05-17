@@ -1,6 +1,6 @@
-﻿using Prism.Mvvm;
-using Scoreboard.Modules.Main.Models.Abstractions;
+﻿using Scoreboard.Modules.Main.Models.Abstractions;
 using Scoreboard.Modules.Main.Models.Data;
+using Scoreboard.Modules.Main.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -106,11 +106,7 @@ internal class MainModel : BindableBase, IMainModel
 
     public static List<string> GetAllConnectedCameras()
     {
-        var cameraNames = new List<string>();
-        for (int i = 1; i <= 5; i++)
-            cameraNames.Add($"Камера {i}");
-
-        return cameraNames;
+        return CamerasEnumerator.GetAllConnectedCameras();
     }
 
     private int _cameraSetting = 0;
@@ -134,7 +130,7 @@ internal class MainModel : BindableBase, IMainModel
         set => SetProperty(ref _logPath, value);
     }
 
-    public static string GetLogPath()
+    public static string? GetLogPath()
     {
         if (File.Exists("settings.ini"))
         {
@@ -163,7 +159,7 @@ internal class MainModel : BindableBase, IMainModel
     }
 
     public static BrushConverter bc = new BrushConverter();
-    private Brush _detectionButtonColor = (Brush)bc.ConvertFrom("#03a9f4");
+    private Brush _detectionButtonColor = (Brush)bc.ConvertFrom("#03a9f4")!;
     public Brush DetectionButtonColor
 
     {

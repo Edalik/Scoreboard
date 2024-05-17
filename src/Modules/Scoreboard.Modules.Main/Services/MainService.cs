@@ -15,13 +15,14 @@ namespace Scoreboard.Modules.Main.Services;
 internal class MainService : IMainService
 {
 
-    public Task CaptureVideo(IMainModel model, CancellationToken cancellationToken, VideoCapture videoCapture)
+    public Task CaptureVideo(IMainModel model, CancellationToken cancellationToken)
     {
         return Task.Run
         (
             async () =>
             {
-                Mat frame = new Mat();
+                using Mat frame = new Mat();
+                using var videoCapture = new VideoCapture(model.CameraSetting);
                 //var periodicTimer = new PeriodicTimer(TimeSpan.FromSeconds(1 / model.Fps));
                 if (!videoCapture.Read(frame))
                 {
@@ -42,8 +43,8 @@ internal class MainService : IMainService
                         count++;
                     }
                     Stopwatch stopwatch = Stopwatch.StartNew();
-                    Mat mat = frame.Clone();
-                    Mat matg = frame.Clone();
+                    using Mat mat = frame.Clone();
+                    using Mat matg = frame.Clone();
                     Cv2.CvtColor(matg, matg, ColorConversionCodes.BGR2GRAY);
                     Cv2.AdaptiveThreshold(matg, matg, 255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.BinaryInv, 21, -21);
                     string log = "";
@@ -52,7 +53,7 @@ internal class MainService : IMainService
                         int i = index * 2;
                         if (model.IsDetectionEnabled && model.IsChecked[index] && model.Points[i] != default)
                         {
-                            Mat tmp = matg.Clone().SubMat(new OpenCvSharp.Rect((int)model.Points[i].X, (int)model.Points[i].Y, (int)model.Points[i + 1].X - (int)model.Points[i].X, (int)model.Points[i + 1].Y - (int)model.Points[i].Y));
+                            using Mat tmp = matg.Clone().SubMat(new OpenCvSharp.Rect((int)model.Points[i].X, (int)model.Points[i].Y, (int)model.Points[i + 1].X - (int)model.Points[i].X, (int)model.Points[i + 1].Y - (int)model.Points[i].Y));
                             string text = "";
                             try
                             {
@@ -81,7 +82,7 @@ internal class MainService : IMainService
                     });
                     for (int i = 0; i < model.Points.Length; i += 2)
                     {
-                        Mat tmp = new Mat();
+                        using Mat tmp = new Mat();
                         if (model.Points[i] != default)
                         {
                             if (model.IsResizing[i / 2])
