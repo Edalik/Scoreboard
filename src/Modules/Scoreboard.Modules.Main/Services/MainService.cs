@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Scoreboard.Modules.Main.Models.Abstractions;
+using Scoreboard.Modules.Main.Models.Data;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -15,14 +16,14 @@ namespace Scoreboard.Modules.Main.Services;
 internal class MainService : IMainService
 {
 
-    public Task CaptureVideo(IMainModel model, CancellationToken cancellationToken)
+    public Task CaptureVideo(IMainModel model, CancellationToken cancellationToken, string? filePath)
     {
         return Task.Run
         (
             async () =>
             {
                 using Mat frame = new Mat();
-                using var videoCapture = new VideoCapture(model.CameraSetting);
+                using var videoCapture = string.IsNullOrEmpty(filePath) ? new VideoCapture(model.CameraSetting) : new VideoCapture(filePath);
                 //var periodicTimer = new PeriodicTimer(TimeSpan.FromSeconds(1 / model.Fps));
                 if (!videoCapture.Read(frame))
                 {
@@ -51,8 +52,13 @@ internal class MainService : IMainService
                     Parallel.For(0, model.Points.Length / 2, index =>
                     {
                         int i = index * 2;
-                        if (model.IsDetectionEnabled && model.IsChecked[index] && model.Points[i] != default)
+                        if (model.IsDetectionEnabled)
                         {
+                            if (!model.IsChecked[index] || model.Points[i] == default)
+                            {
+                                model.ScoreboardInfo.SetValue(index, "");
+                                return;
+                            }
                             using Mat tmp = matg.Clone().SubMat(new OpenCvSharp.Rect((int)model.Points[i].X, (int)model.Points[i].Y, (int)model.Points[i + 1].X - (int)model.Points[i].X, (int)model.Points[i + 1].Y - (int)model.Points[i].Y));
                             string text = "";
                             try
@@ -110,6 +116,11 @@ internal class MainService : IMainService
                             model.Log = log + "\n" + model.Log;
                         else
                             model.Log = log;
+                    }
+                    if (model.IsDetectionEnabled)
+                    {
+                        model.Settings = Settings.GetSettings();
+                        model.Settings.SendData(model);
                     }
 
                     Application.Current.Dispatcher.Invoke(() =>

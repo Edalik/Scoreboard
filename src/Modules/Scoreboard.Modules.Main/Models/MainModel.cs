@@ -229,4 +229,18 @@ internal class MainModel : BindableBase, IMainModel
         get => _scoreboardInfo;
         set => SetProperty(ref _scoreboardInfo, value);
     }
+
+    public Settings _settings = Settings.GetSettings();
+    public Settings Settings
+    {
+        get => _settings;
+        set => SetProperty(ref _settings, value);
+    }
+
+    public Settings _tempSettings = Settings.GetSettings();
+    public Settings TempSettings
+    {
+        get => _tempSettings;
+        set => SetProperty(ref _tempSettings, value);
+    }
 }

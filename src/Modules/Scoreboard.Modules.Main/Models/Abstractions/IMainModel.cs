@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace Scoreboard.Modules.Main.Models.Abstractions;
 
-internal interface IMainModel
+public interface IMainModel
 {
     ImageSource CleanFrame { get; set; }
     ImageSource Frame { get; set; }
@@ -33,4 +33,6 @@ internal interface IMainModel
     bool IsAdvancedMode { get; set; }
     bool IsSavingDataSet { get; set; }
     ScoreboardInfo ScoreboardInfo { get; set; }
+    Settings Settings { get; set; }
+    Settings TempSettings { get; set; }
 }

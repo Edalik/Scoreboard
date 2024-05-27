@@ -6,7 +6,9 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Scoreboard.Modules.Main.Models;
 using Scoreboard.Modules.Main.Models.Abstractions;
+using Scoreboard.Modules.Main.Models.Data;
 using Scoreboard.Modules.Main.Services;
+using Scoreboard.Modules.Main.Views;
 using System;
 using System.IO;
 using System.Threading;
@@ -42,6 +44,8 @@ class MainViewModel : ReactiveObject
     public ICommand SaveSettingsCommand { get; }
     public ICommand LoadSettingsCommand { get; }
     public ICommand ResetSettingsCommand { get; }
+    public ICommand OscCommand { get; }
+    public ICommand OscSaveSettingsCommand { get; }
     [Reactive] public CancellationTokenSource LastTokenSource { get; set; }
     [Reactive] public bool IsLeftMenuOpen { get; set; }
     [Reactive] public bool IsRightMenuOpen { get; set; }
@@ -255,15 +259,20 @@ class MainViewModel : ReactiveObject
         (
             async () =>
             {
-                if (lastReadingTask is not null)
+                if (lastReadingTask is not null && Model.IsDetectionEnabled)
                 {
                     var Result = MessageBox.Show("Остановить текущее распознавание?", "Остановить текущее распознавание?", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (Result == MessageBoxResult.No)
                     {
                         return;
                     }
-                    Model.Frame = null;
                 }
+
+                Model.IsDetectionEnabled = false;
+                Model.DetectionButtonText = "Начать распознавание";
+                BrushConverter bc = new BrushConverter();
+                Model.DetectionButtonColor = (Brush)bc.ConvertFrom("#03a9f4")!;
+                Model.Frame = null;
 
                 LastTokenSource?.Cancel();
                 LastTokenSource = new();
@@ -278,9 +287,8 @@ class MainViewModel : ReactiveObject
                 {
                     return;
                 }
-                VideoCapture videoCapture = new VideoCapture(openFileDialog.FileName);
 
-                lastReadingTask = CaptureVideo(LastTokenSource.Token);
+                lastReadingTask = CaptureVideo(LastTokenSource.Token, openFileDialog.FileName);
                 await lastReadingTask;
             }
         );
@@ -340,11 +348,9 @@ class MainViewModel : ReactiveObject
                 {
                     return;
                 }
-                using (StreamWriter writer = new StreamWriter("settings.ini"))
-                {
-                    writer.WriteLine(folderBrowserDialog.SelectedPath);
-                }
-                Model.LogPath = folderBrowserDialog.SelectedPath;
+                Model.Settings = Settings.GetSettings();
+                Model.Settings.LogPath = folderBrowserDialog.SelectedPath;
+                Model.Settings.SaveSettings();
             }
         );
 
@@ -352,9 +358,8 @@ class MainViewModel : ReactiveObject
         (
             () =>
             {
-                if (Model.LogPath == "" || !Directory.Exists(Model.LogPath))
+                if (Model.Settings.LogPath == "" || !Directory.Exists(Model.Settings.LogPath))
                 {
-                    MessageBox.Show("Перед началом распознавания необходимо выбрать путь сохранения лога");
                     System.Windows.Forms.FolderBrowserDialog folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog()
                     {
                         ShowNewFolderButton = true,
@@ -364,14 +369,11 @@ class MainViewModel : ReactiveObject
                     folderBrowserDialog.ShowDialog();
                     if (folderBrowserDialog.SelectedPath == "")
                     {
-                        MessageBox.Show("Невозможно начать распознавание не выбрав путь сохранения лога");
                         return;
                     }
-                    using (StreamWriter writer = new StreamWriter("settings.ini"))
-                    {
-                        writer.WriteLine(folderBrowserDialog.SelectedPath);
-                    }
-                    Model.LogPath = folderBrowserDialog.SelectedPath;
+                    Model.Settings = Settings.GetSettings();
+                    Model.Settings.LogPath = folderBrowserDialog.SelectedPath;
+                    Model.Settings.SaveSettings();
                 };
 
                 if (Model.IsDetectionEnabled)
@@ -504,6 +506,24 @@ class MainViewModel : ReactiveObject
                     Model.Fps--;
             }
         );
+
+        OscCommand = ReactiveCommand.Create
+        (
+            () =>
+            {
+                Model.TempSettings = Settings.GetSettings();
+                OscWindow osc = new OscWindow();
+                osc.ShowDialog();
+            }
+        );
+
+        OscSaveSettingsCommand = ReactiveCommand.Create
+        (
+            () =>
+            {
+                Model.TempSettings.SaveSettings();
+            }
+        );
     }
 
     private void ChangeMode(string? parameter)
@@ -573,5 +593,5 @@ class MainViewModel : ReactiveObject
         Model.IsResizing[choosingID / 2] = !Model.IsResizing[choosingID / 2];
     }
 
-    private Task CaptureVideo(CancellationToken cancellationToken) => _mainService.CaptureVideo(Model, cancellationToken);
+    private Task CaptureVideo(CancellationToken cancellationToken, string? fileName = null) => _mainService.CaptureVideo(Model, cancellationToken, fileName);
 }

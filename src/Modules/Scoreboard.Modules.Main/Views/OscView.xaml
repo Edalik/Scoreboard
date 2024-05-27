@@ -1,0 +1,391 @@
+﻿<UserControl x:Class="Scoreboard.Modules.Main.Views.OscView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Scoreboard.Modules.Main.Views"
+             xmlns:vm="clr-namespace:Scoreboard.Modules.Main.ViewModels"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d"
+             Width="1080"
+             d:DataContext="{d:DesignInstance vm:MainViewModel}"
+             Style="{StaticResource MaterialDesignUserControl}">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="IP-адрес:" Margin="5,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                <TextBox Grid.Column="1" Style="{StaticResource MaterialDesignOutlinedTextBox}" Margin="0,5,5,5" Text="{Binding Model.TempSettings.IpAddress}"/>
+
+            </Grid>
+
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Порт:" Margin="5,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                <TextBox Grid.Column="1" Style="{StaticResource MaterialDesignOutlinedTextBox}" Margin="0,5,5,5" Text="{Binding Model.TempSettings.Port}"/>
+
+            </Grid>
+
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[0]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для команды хозяев" Text="{Binding Model.TempSettings.Path[0]}"/>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="6,10,1,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[1]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для команды гостей" Text="{Binding Model.TempSettings.Path[1]}"/>
+
+            </Grid>
+            
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[2]}"/>
+
+            <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для периода" Text="{Binding Model.TempSettings.Path[2]}"/>
+
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[3]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для времени минуты" Text="{Binding Model.TempSettings.Path[3]}"/>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="6,10,1,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[4]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для времени секунды" Text="{Binding Model.TempSettings.Path[4]}"/>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[5]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для счета хозяев" Text="{Binding Model.TempSettings.Path[5]}"/>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="6,10,1,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[6]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для счета гостей" Text="{Binding Model.TempSettings.Path[6]}"/>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[7]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления хозяев 1 номер игрока" Text="{Binding Model.TempSettings.Path[7]}"/>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="6,10,1,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[13]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления гостей 1 номер игрока" Text="{Binding Model.TempSettings.Path[13]}"/>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[8]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления хозяев 1 время минуты" Text="{Binding Model.TempSettings.Path[8]}"/>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="6,10,1,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[14]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления гостей 1 время минуты" Text="{Binding Model.TempSettings.Path[14]}"/>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="7">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[9]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления хозяев 1 время секунды" Text="{Binding Model.TempSettings.Path[9]}"/>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="6,10,1,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[15]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления гостей 1 время секунды" Text="{Binding Model.TempSettings.Path[15]}"/>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[10]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления хозяев 2 номер игрока" Text="{Binding Model.TempSettings.Path[10]}"/>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="6,10,1,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[16]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления гостей 2 номер игрока" Text="{Binding Model.TempSettings.Path[16]}"/>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="9">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[11]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления хозяев 2 время минуты" Text="{Binding Model.TempSettings.Path[11]}"/>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="6,10,1,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[17]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления гостей 2 время минуты" Text="{Binding Model.TempSettings.Path[17]}"/>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="16,10,11,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[12]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления хозяев 2 время секунды" Text="{Binding Model.TempSettings.Path[12]}"/>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Margin="6,10,1,10" Cursor="Hand" IsChecked="{Binding Model.TempSettings.IsChecked[18]}"/>
+
+                <TextBox Grid.Column="1" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}" md:HintAssist.Hint="Путь для удаления гостей 2 время секунды" Text="{Binding Model.TempSettings.Path[18]}"/>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="11">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Content="Сохранить" Margin="5" Command="{Binding OscSaveSettingsCommand}" Click="Button_Click"/>
+
+            <Button Grid.Column="1" BorderBrush="IndianRed" Background="IndianRed" Content="Отменить" Margin="5" Click="Button_Click" Cursor="Hand"/>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

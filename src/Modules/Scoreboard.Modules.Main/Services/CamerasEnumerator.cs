@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using System.Windows.Documents;
 
 namespace Scoreboard.Modules.Main.Services
 {
@@ -35,7 +34,7 @@ namespace Scoreboard.Modules.Main.Services
         public static List<string> GetAllConnectedCameras()
         {
             List<string> lb = new List<string>();
-            Object? bagObj = null;
+            object? bagObj = null;
             object? comObj = null;
             ICreateDevEnum? enumDev = null;
             IEnumMoniker? enumMon = null;

@@ -15,11 +15,13 @@ public class MainModule : IModule
     {
         var regionManager = containerProvider.Resolve<IRegionManager>();
         regionManager.RegisterViewWithRegion("MainRegion", typeof(MainView));
+        regionManager.RegisterViewWithRegion("OscRegion", typeof(OscView));
     }
 
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterSingleton<IMainModel, MainModel>();
         ViewModelLocationProvider.Register<MainView, MainViewModel>();
+        ViewModelLocationProvider.Register<OscView, MainViewModel>();
     }
 }

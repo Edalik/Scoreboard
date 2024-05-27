@@ -48,6 +48,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
@@ -84,10 +85,13 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
 
 
                         <Grid Margin="10">
@@ -116,6 +120,7 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Column="1" Content="Кадров в секунду" Foreground="Gray"/>
+                            
                             <Grid Grid.Column="1" Grid.Row="1" Cursor="">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
@@ -127,17 +132,29 @@
                                 <Button Grid.Column="1" Content="{md:PackIcon Kind=ExpandLess}" Style="{StaticResource IconButton}" Margin="0" Command="{Binding FpsIncreaseCommand}"/>
                                 <Button Grid.Column="2" Content="{md:PackIcon Kind=ExpandMore}" Style="{StaticResource IconButton}" Margin="0" Command="{Binding FpsDecreaseCommand}"/>
                             </Grid>
+
                         </Grid>
 
                         <Button Grid.Column="2" Margin="10" Content="{Binding Model.DetectionButtonText}" Background="{Binding Model.DetectionButtonColor}" BorderBrush="{Binding Model.DetectionButtonColor}" Command="{Binding DetectionCommand}" Cursor="Hand"/>
 
-                        <Button Grid.Column="3" Margin="10" Content="Выбор арены" Command="{Binding LoadSettingsCommand}" Cursor="Hand"/>
-                        
-                        <Button Grid.Column="4" Margin="10" Content="Выбрать путь сохранения лога" Command="{Binding LogPathCommand}" Cursor="Hand"/>
+                        <Button Grid.Column="0" Grid.Row="1" Margin="10" Content="Выбор настроек распознавания" Command="{Binding LoadSettingsCommand}" Cursor="Hand"/>
 
+                        <Button Grid.Column="1" Grid.Row="1" Margin="10" Content="Выбрать путь сохранения результата" Command="{Binding LogPathCommand}" Cursor="Hand"/>
+
+                        <Button Grid.Column="2" Grid.Row="1" Margin="10" Content="Настройки OSC" Command="{Binding OscCommand}" Cursor="Hand"/>
                     </Grid>
 
-                    <Image Grid.Row="1" Margin="65,0,65,0" Source="{Binding Model.Frame}">
+                    <Grid Grid.Row="1" Margin="75, 0, 10, 10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        
+                    </Grid>
+
+                    <Image Grid.Row="2" Margin="65,0,65,0" Source="{Binding Model.Frame}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseUp">
                                 <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>

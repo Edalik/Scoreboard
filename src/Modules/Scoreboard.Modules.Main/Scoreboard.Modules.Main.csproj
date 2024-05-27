@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CoreOSC" Version="1.0.0" />
 		<PackageReference Include="MaterialDesignColors" Version="3.0.0-ci368" />
 		<PackageReference Include="MaterialDesignExtensions" Version="4.0.0-a02" />
 		<PackageReference Include="MaterialDesignThemes.MahApps" Version="3.0.0-ci368" />
@@ -27,12 +28,15 @@
 	<ItemGroup>
 		<None Update="tessdata\configs\digits">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</None>
 		<None Update="tessdata\rus.traineddata">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</None>
 		<None Update="tessdata\ssd.traineddata">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</None>
 	</ItemGroup>
 

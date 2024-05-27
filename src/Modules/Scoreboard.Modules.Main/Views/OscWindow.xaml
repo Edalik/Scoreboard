@@ -1,18 +1,18 @@
-﻿<Window x:Class="Scoreboard.Shell.Views.MainWindow"
+﻿<Window x:Class="Scoreboard.Modules.Main.Views.OscWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Scoreboard.Shell.Views"
+        xmlns:local="clr-namespace:Scoreboard.Modules.Main.Views"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
-        Title="Распознавание хоккейного табло"
-        Width="1920"
-        Height="1080"
-        WindowState="Maximized"
+        Title="Настройки OSC"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
         Style="{StaticResource MaterialDesignWindow}">
     <Grid>
-        <ContentControl prism:RegionManager.RegionName="MainRegion"/>
+        <ContentControl prism:RegionManager.RegionName="OscRegion" Margin="0,5,0,5"/>
     </Grid>
 </Window>
